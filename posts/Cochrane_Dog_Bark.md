@@ -8,7 +8,7 @@ tags: [R, replicating, finance, return predictability]
 
 
 
-In this post, I want to replicate some results of Cochrane (2008), The Dog That Did Not Bark: A Defense of Return Predictability, Review of Financial Studies, 21 (4). You can find that paper on John Cochrane's [webpage](http://faculty.chicagobooth.edu/john.cochrane/research/papers/cochrane%20dog%20that%20did%20not%20bark.pdf). I wrote some thoughts about return predictability already on my Goyal/Welch replication post, so please check this one out for some more background (TODO: link). Or just read the papers, they explain it better than I could anyway.
+In this post, I want to replicate some results of Cochrane (2008), The Dog That Did Not Bark: A Defense of Return Predictability, Review of Financial Studies, 21 (4). You can find that paper on John Cochrane's [webpage](http://faculty.chicagobooth.edu/john.cochrane/research/papers/cochrane%20dog%20that%20did%20not%20bark.pdf). I wrote some thoughts about return predictability already on my Goyal/Welch replication post, so please check this one out for some more background. Or just read the papers, they explain it better than I could anyway.
 
 Replication of the forecasting regressions in Cochrane's Table 1
 -------------------------

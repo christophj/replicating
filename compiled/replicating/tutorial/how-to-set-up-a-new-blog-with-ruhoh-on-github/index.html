@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>How to set up a new blog with ruhoh on github</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Christoph Jäckel">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/replicating/assets/twitter/stylesheets/bootstrap.min.css?0.5893202667198209" type="text/css" rel="stylesheet" media="all">
+<link href="/replicating/assets/twitter/stylesheets/style.css?0.3062235299251017" type="text/css" rel="stylesheet" media="all">
+<link href="/replicating/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css?0.35112990158074175" type="text/css" rel="stylesheet" media="all">
+
+    
+
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-narrow">
+          <a class="brand" href="/replicating/">Replicating</a>
+          <ul class="nav">
+              
+                <li><a href="/replicating/archive">Archive</a></li>
+              
+              
+                <li><a href="/replicating/tags">Tags</a></li>
+              
+              
+                <li><a href="/replicating/categories">Categories</a></li>
+              
+              
+                <li><a href="/replicating/pages">Pages</a></li>
+              
+              
+                <li><a href="/replicating/about">About me and this blog</a></li>
+              
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-narrow">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>How to set up a new blog with ruhoh on github </h1>
+</div>
+
+<div class="row-fluid post-full">
+  <div class="span12">
+    <div class="date">
+      <span>2013-02-10</strong>
+    </div>
+    <div class="content">
+      <p>Since it took me quite some effort to get this blog running, I give a short summary of the steps I went through. Note, however, that I am really a beginner at this, so I only point you to those links that helped me. Don&#39;t even bother to ask me when something doesn&#39;t work. Not that I wouldn&#39;t want to help...I just couldn&#39;t. Oh, and just to be clear: this guide assumes that you are using Linux.</p>
+
+<h2 id="toc_0">Get ruhoh running</h2>
+
+<p><a href="http://ruhoh.com/">ruhoh</a> is a static blogging platform. Why would you want to use that in the first place? Good question! The point is that I wanted to publish some of my replications of finance papers and for that I wanted to be able to write both formulas and code snippets. Turns out that this isn&#39;t so easy with normal blogging platforms. For instance, I signed up for Bloggers from Google and couldn&#39;t get it to work. I wasn&#39;t able to get <code>mathjax</code> to run.</p>
+
+<p>So after some research, I found <a href="http://jekyllbootstrap.com/">Jekyll/Bootstrap</a>, which seemed to do what I wanted. However, on that webpage the maintainer wrote that he now focused his efforts on <code>ruhoh</code> instead, so I thought that I might as well just do that. Note that <code>ruhoh</code> is quite new though, so <code>Jekyll</code> is definitely better documented.</p>
+
+<p>Anyways, to get <code>ruhoh</code> running, just follow the <a href="https://github.com/ruhoh/blog/tree/2.0.alpha#readme">installer guide</a>. It looks pretty straightforward, but I had to deal with the issue that there are a lot of dependencies. I can&#39;t all memorize them now, but my workflow was something like this:</p>
+
+<ol>
+<li>Write command from installer guide into terminal.</li>
+<li>Get message on why this failed (<em>xyz</em> is missing).</li>
+<li>Googling message.</li>
+<li>Dealing with it (mostly just installing <em>xyz</em>, which often also needed <em>abc</em>, etc.)</li>
+</ol>
+
+<p>So after that was done, you should have a folder somewhere in your  folder structure with all the subfolder copied from Jade&#39;s github page. To check if it worked out, fire up a terminal, go to the folder you copied everything into, and type:</p>
+
+<pre><code>$ bundle exec rackup -p 9292
+</code></pre>
+
+<p>This starts a web server that hosts your blog here: <a href="http://localhost:9292">http://localhost:9292</a>. So basically, you can check out your blog in the browser. Now you can edit all the posts and play around.</p>
+
+<h2 id="toc_1">Install mathjax</h2>
+
+<p>You have to install a <code>mathjax</code> widget, which sounds more complicated than it is. Your folder structure should have one folder named <em>widgets</em>. In this folder, add another folder named <em>mathjax</em>, and a subfolder named <em>layouts</em> and copy <a href="https://github.com/ramnathv/ramnathv.ruhoh.com/blob/master/widgets/mathjax/layouts/mathjax.html">this file</a> into the <em>layouts</em> folder. Actually, if you check out that file online, you also see the folder structure it has to be into.</p>
+
+<p>Now you should be able to write equations in LaTex. In-text math should be surrounded with $ signs, equations in a separate line with double dollar signs. To check if it worked, copy this <a href="https://gist.github.com/plusjade/2699636">sample file</a> into your pages folder and check it out in your localhost session. </p>
+
+<p>The only issue I had was that I couldn&#39;t use underscores, which are quite important in LaTex. However, this <a href="http://stackoverflow.com/questions/10438937/is-there-a-markdown-parser-supported-on-jekyll-that-plays-nicely-with-mathjax">SO post</a> solved this problem.</p>
+
+<h2 id="toc_2">Deploying your blog on github</h2>
+
+<p>If you are happy with how your blog looks locally, it&#39;s time to move it to the world wide web. You could find a good web hoster or you could decide to just use Github pages: it&#39;s for free and your already use github (otherwise you couldn&#39;t have installed <code>ruhoh</code>). Here&#39;s just my personal rant though: the Github pages documentation is really bad. Seriously, I wouldn&#39;t call it a documentation at all. It&#39;s a bunch of FAQs that don&#39;t give you any big picture at all. To be fair, it&#39;s probably written for the average github user who is already quite familiar with this service. Sadly, I&#39;m not...</p>
+
+<p>However, <a href="https://github.com/ramnathv">Ramnath Vaidyanathan</a> rescued me again (he also posted the Mathjax-widget code). Just  follow these <a href="https://gist.github.com/ramnathv/3890278">instructions</a> and you should be able to get your blog online. As you can see at the link, I haven&#39;t quite figured out how to run the makefile, so I just type the commands into the terminal manually. However, this should be easy to figure out, but I postpone that to later.</p>
+
+<p>Before I run those commands though, I pushed all my blog files to github as well. I&#39;m not sure if this is necessary, but I did it anyways. To do so, you have to run the following commands in the working directory where your blog is saved:</p>
+
+<pre><code>$ git init
+$ git add .
+$ git commit -m &quot;First commit to blog.&quot;
+$ git remote add origin git@github.com:USER/REPO.git
+$ git push -u origin master
+</code></pre>
+
+<p>Obviously, you have to replace USER with your github username and REPO with the repository that you have created before on the github.com website. If you do this, you should see all the files pushed to github.com and it should look similar to my <a href="https://github.com/christophj">repository</a>.</p>
+
+<h2 id="toc_3">Next steps</h2>
+
+<p>The next steps I&#39;m playing are the following:</p>
+
+<ul>
+<li>Get Google analytics to run.</li>
+<li>Change the look of the code snippets. I don&#39;t really like the gray, it looks too pale.</li>
+</ul>
+
+<p>If I figure those things out, I update this post here.</p>
+
+    </div>
+    <ul class="tag_box inline">
+      <li><i class="icon-folder-open"></i></li>
+      <li>
+        <a href="/replicating/categories#tutorial-ref">tutorial <span>2</span></a>
+      </li>
+    </ul>
+    <ul class="tag_box inline">
+      <li><i class="icon-tags"></i></li>
+      <li>
+        <a href="/replicating/tags#tutorial-ref">tutorial <span>2</span></a>
+      </li>
+    </ul>
+    <hr>
+    <div class="pagination">
+      <ul>
+          <li class="prev"><a href="/replicating/r/replicating-cochrane-2008" title="Replicating Cochrane (2008)">&larr; Previous</a></li>
+
+          <li><a href="/replicating/archive">Archive</a></li>
+
+          <li class="next disabled"><a>Next &rarr;</a>
+      </ul>
+    </div>
+    <hr>
+    <div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+</div>
+
+
+      </div>
+
+      <hr>
+      <div class="footer">
+        <p>&copy; Christoph Jäckel 2013
+          with help from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+      </div>
+
+    </div> <!-- /container -->
+
+    <!-- Google Prettify -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/prettify/188.0.0/prettify.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+<!-- end Google Prettify -->
+    <script>
+  var _gaq=[['_setAccount','UA-38388839-1'],['_trackPageview']];
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+  s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+    <!-- INSERT MATHJAX CONFIGURATION FROM MATH.STACKEXCHANGE -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+<script type="text/javascript"
+src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  </body>
+</html>

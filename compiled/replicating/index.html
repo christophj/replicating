@@ -12,9 +12,9 @@
     <![endif]-->
 
     <!-- Le styles -->
-    <link href="/replicating/assets/twitter/stylesheets/bootstrap.min.css?0.6714088147319264" type="text/css" rel="stylesheet" media="all">
-<link href="/replicating/assets/twitter/stylesheets/style.css?0.8143660922442844" type="text/css" rel="stylesheet" media="all">
-<link href="/replicating/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css?0.5011808954892679" type="text/css" rel="stylesheet" media="all">
+    <link href="/replicating/assets/twitter/stylesheets/bootstrap.min.css?0.2745689870265686" type="text/css" rel="stylesheet" media="all">
+<link href="/replicating/assets/twitter/stylesheets/style.css?0.6847960400628077" type="text/css" rel="stylesheet" media="all">
+<link href="/replicating/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css?0.2284942136131709" type="text/css" rel="stylesheet" media="all">
 
     
 
@@ -65,9 +65,49 @@
 <div class="row-fluid">
   <div class="span12">
     <div class="post">
+  <h3 class="title"><a href="/replicating/tutorial/how-to-set-up-a-new-blog-with-ruhoh-on-github">How to set up a new blog with ruhoh on github</a> <span class="date">2013-02-10</span></h3>
+
+  <p>Since it took me quite some effort to get this blog running, I give a short summary of the steps I went through. Note, however, that I am really a beginner at this, so I only point you to those links that helped me. Don&#39;t even bother to ask me when something doesn&#39;t work. Not that I wouldn&#39;t want to help...I just couldn&#39;t. Oh, and just to be clear: this guide assumes that you are using Linux.</p>
+
+<h2 id="toc_0">Get ruhoh running</h2>
+
+<p><a href="http://ruhoh.com/">ruhoh</a> is a static blogging platform. Why would you want to use that in the first place? Good question! The point is that I wanted to publish some of my replications of finance papers and for that I wanted to be able to write both formulas and code snippets. Turns out that this isn&#39;t so easy with normal blogging platforms. For instance, I signed up for Bloggers from Google and couldn&#39;t get it to work. I wasn&#39;t able to get <code>mathjax</code> to run.</p>
+
+<p>So after some research, I found <a href="http://jekyllbootstrap.com/">Jekyll/Bootstrap</a>, which seemed to do what I wanted. However, on that webpage the maintainer wrote that he now focused his efforts on <code>ruhoh</code> instead, so I thought that I might as well just do that. Note that <code>ruhoh</code> is quite new though, so <code>Jekyll</code> is definitely better documented.</p>
+
+<p>Anyways, to get <code>ruhoh</code> running, just follow the <a href="https://github.com/ruhoh/blog/tree/2.0.alpha#readme">installer guide</a>. It looks pretty straightforward, but I had to deal with the issue that there are a lot of dependencies. I can&#39;t all memorize them now, but my workflow was something like this:</p>
+
+<ol>
+<li>Write command from installer guide into terminal.</li>
+<li>Get message on why this failed (<em>xyz</em> is missing).</li>
+<li>Googling message.</li>
+<li>Dealing with it (mostly just installing <em>xyz</em>, which often also needed <em>abc</em>, etc.)</li>
+</ol>
+
+<p>So after that was done, you should have a folder somewhere in your  folder structure with all the subfolder copied from Jade&#39;s github page. To check if it worked out, fire up a terminal, go to the folder you copied everything into, and type:</p>
+
+<pre><code>$ bundle exec rackup -p 9292
+</code></pre>
+
+<p>This starts a web server that hosts your blog here: <a href="http://localhost:9292">http://localhost:9292</a>. So basically, you can check out your blog in the browser. Now you can edit all the posts and play around.</p>
+
+<h2 id="toc_1">Install mathjax</h2>
+
+<p>You have to install a <code>mathjax</code> widget, which sounds more complicated than it is. Your folder structure should have one folder named <em>widgets</em>. In this folder, add another folder named <em>mathjax</em>, and a subfolder named <em>layouts</em> and copy <a href="https://github.com/ramnathv/ramnathv.ruhoh.com/blob/master/widgets/mathjax/layouts/mathjax.html">this file</a> into the <em>layouts</em> folder. Actually, if you check out that file online, you also see the folder structure it has to be into.</p>
+
+<p>Now you should be able to write equations in LaTex. In-text math should be surrounded with $ signs, equations in a separate line with double dollar signs. To check if it worked, copy this <a href="https://gist.github.com/plusjade/2699636">sample file</a> into your pages folder and check it out in your localhost session. </p>
+
+<p>The only issue I had was that I couldn&#39;t use underscores, which are quite important in LaTex. However, this <a href="http://stackoverflow.com/questions/10438937/is-there-a-markdown-parser-supported-on-jekyll-that-plays-nicely-with-mathjax">SO post</a> solved this problem.</p>
+
+
+  <div class="more">
+    <a href="/replicating/tutorial/how-to-set-up-a-new-blog-with-ruhoh-on-github" class="btn btn-small">read more..</a>
+  </div>
+</div>
+<div class="post">
   <h3 class="title"><a href="/replicating/r/replicating-cochrane-2008">Replicating Cochrane (2008)</a> <span class="date">2013-02-09</span></h3>
 
-  <p>In this post, I want to replicate some results of Cochrane (2008), The Dog That Did Not Bark: A Defense of Return Predictability, Review of Financial Studies, 21 (4). You can find that paper on John Cochrane&#39;s <a href="http://faculty.chicagobooth.edu/john.cochrane/research/papers/cochrane%20dog%20that%20did%20not%20bark.pdf">webpage</a>. I wrote some thoughts about return predictability already on my Goyal/Welch replication post, so please check this one out for some more background (TODO: link). Or just read the papers, they explain it better than I could anyway.</p>
+  <p>In this post, I want to replicate some results of Cochrane (2008), The Dog That Did Not Bark: A Defense of Return Predictability, Review of Financial Studies, 21 (4). You can find that paper on John Cochrane&#39;s <a href="http://faculty.chicagobooth.edu/john.cochrane/research/papers/cochrane%20dog%20that%20did%20not%20bark.pdf">webpage</a>. I wrote some thoughts about return predictability already on my Goyal/Welch replication post, so please check this one out for some more background. Or just read the papers, they explain it better than I could anyway.</p>
 
 <h2 id="toc_0">Replication of the forecasting regressions in Cochrane&#39;s Table 1</h2>
 
@@ -239,7 +279,7 @@ $$</p>
 </script>
 <!-- end Google Prettify -->
     <script>
-  var _gaq=[['_setAccount','UA-123-12'],['_trackPageview']];
+  var _gaq=[['_setAccount','UA-38388839-1'],['_trackPageview']];
   (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
   g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
   s.parentNode.insertBefore(g,s)}(document,'script'));
