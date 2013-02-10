@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Christoph Jäckel">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/replicating/assets/twitter/stylesheets/bootstrap.min.css?0.6714088147319264" type="text/css" rel="stylesheet" media="all">
+<link href="/replicating/assets/twitter/stylesheets/style.css?0.8143660922442844" type="text/css" rel="stylesheet" media="all">
+<link href="/replicating/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css?0.5011808954892679" type="text/css" rel="stylesheet" media="all">
+
+    
+
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-narrow">
+          <a class="brand" href="/replicating/">Replicating</a>
+          <ul class="nav">
+              
+                <li><a href="/replicating/archive">Archive</a></li>
+              
+              
+                <li><a href="/replicating/tags">Tags</a></li>
+              
+              
+                <li><a href="/replicating/categories">Categories</a></li>
+              
+              
+                <li><a href="/replicating/pages">Pages</a></li>
+              
+              
+                <li><a href="/replicating/about">About me and this blog</a></li>
+              
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-narrow">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>Home </h1>
+</div>
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="post">
+  <h3 class="title"><a href="/replicating/r/replicating-cochrane-2008">Replicating Cochrane (2008)</a> <span class="date">2013-02-09</span></h3>
+
+  <p>In this post, I want to replicate some results of Cochrane (2008), The Dog That Did Not Bark: A Defense of Return Predictability, Review of Financial Studies, 21 (4). You can find that paper on John Cochrane&#39;s <a href="http://faculty.chicagobooth.edu/john.cochrane/research/papers/cochrane%20dog%20that%20did%20not%20bark.pdf">webpage</a>. I wrote some thoughts about return predictability already on my Goyal/Welch replication post, so please check this one out for some more background (TODO: link). Or just read the papers, they explain it better than I could anyway.</p>
+
+<h2 id="toc_0">Replication of the forecasting regressions in Cochrane&#39;s Table 1</h2>
+
+<p>Let&#39;s first repeat the forecasting regressions Cochrane runs in Table 1 of his paper. He uses data in real terms, i.e. deflated by the CPI, and on an annual basis ranging from 1926 to 2004. I do not have access to CRSP, but fortunately, we find similar data on Robert Shiller&#39;s <a href="http://www.econ.yale.edu/%7Eshiller/data.htm">webpage</a>. His data is saved in an Excel-file and is formatted in such a way that you cannot just read it into R. So you manually have to delete unnessary rows and save the sheet <em>Data</em> as a .CSV file. Also, here is the naming convention I apply for the relevant columns:</p>
+
+<ul>
+<li><strong>RealR</strong>: Real One_Year Interest Rate (column H as of february 2013). Note that Cochrane uses real return on 3-month Treasury-Bills, but I&#39;m to lazy to find that somewhere else and match it. </li>
+<li><strong>RealP</strong>: RealP Stock Price (column P as of february 2013).</li>
+<li><strong>RealD</strong>: RealD S&amp;P Dividend (column O as of february 2013).</li>
+<li><strong>Ret_SP</strong>: Return on S&amp;P Composite (column P as of february 2013).</li>
+<li><strong>Year</strong>: First column with the years.</li>
+</ul>
+
+<pre><code class="r">library(data.table)
+#CHANGE TO THE DIRECTORY IN WHICH YOU SAVED THE FILE
+strPath &lt;- &quot;/home/christoph/Dropbox/R_Package_Development/vignettes_REM/Data/Robert_Shiller_Data_Formatted.csv&quot;
+#strPath &lt;- &quot;C:/Dropbox/R_Package_Development/vignettes_REM/Data/Robert_Shiller_Data_Formatted.csv&quot;
+shiller_data &lt;- as.data.table(read.csv(strPath))
+strStart &lt;- 1924; strEnd &lt;- 2005
+#GET RELEVANT DATA
+shiller_data &lt;- shiller_data[, Dgrowth := c(NA, exp(diff(log(RealD))))]
+shiller_data &lt;- shiller_data[, DP := RealD/RealP][, Ret_SP := Ret_SP + 1]
+vec_Ret_SP &lt;- c(NA, shiller_data[2:nrow(shiller_data), RealP + RealD]/shiller_data[1:(nrow(shiller_data)-1), RealP ])
+shiller_data &lt;- shiller_data[, Ret_SP := vec_Ret_SP]
+shiller_data &lt;- shiller_data[, Ex_Ret_SP := Ret_SP - RealR]
+shiller_data &lt;- shiller_data[Year &gt;= strStart &amp; Year &lt;= strEnd, list(Ret_SP, Ex_Ret_SP, RealR, RealD, Dgrowth, DP)]
+summary(shiller_data)
+</code></pre>
+
+
+  <div class="more">
+    <a href="/replicating/r/replicating-cochrane-2008" class="btn btn-small">read more..</a>
+  </div>
+</div>
+<div class="post">
+  <h3 class="title"><a href="/replicating/r/how-to-produce-nice-tables-in-pdfs-using-knitr-sweave-and-r">How to produce nice tables in PDFs using knitr/Sweave and R</a> <span class="date">2013-02-03</span></h3>
+
+  <p>In this post, I want to show you how to produce nice tables in PDFs, even if you use <a href="http://yihui.name/knitr/">knitr</a> or <a href="http://www.stat.uni-muenchen.de/%7Eleisch/Sweave/">Sweave</a> to produce your reports dynamically. Why should you use tools for  reproducible research in the first place? Well, it guarantees that you always know how you did your analysis. I mean if someone came up to me today and asked me how I computed the mean on page 52 of my diploma thesis, it would take me probably hours to figure that out (or maybe I couldn&#39;t figure it out anymore at all). When someone asks me how I computed the mean of one of my papers written during my PhD, I have a look at my knitr document and could tell him in minutes. That&#39;s the beauty of it, so you should definitely check it out if you don&#39;t use such a tool so far.</p>
+
+<p>However, one thing that bothered me for a while was that the tables produced didn&#39;t really look great. I mean they had all necessary information in it, but I just like tables that look good and with LaTex (knitr or Sweave are just built on top of LaTex, so you still use that) it is normally quite easy to make tables look great, for instance by using the package <strong>booktabs</strong>. In my early knitr days, I just edited the .tex file produced by knitr, but this seemed like a quick and dirty hack that was prone to non-reproducible errors (for instance, you delete one row in the table). That&#39;s what you want to get rid of when using those tools, so I figured out how to edit the tables in the source .Rnw file. This is what I want to show you here with a small minimal example.</p>
+
+<p>There are two key tricks that we have to use:</p>
+
+<ol>
+<li>The option <em>add.to.row</em> in the function <em>print.xtable</em> allows us to enter strings before or after certain rows in your table. </li>
+<li>The backslash is a special character in R. For instance, if you want to get a line break you type &quot;\n&quot;, which does not actually print that string, but inserts a line break. However, in tables we actually want to enter backslashes at the end of rows because two backslashes break a row there. So how do we do that? We just write four backslashes: the first backslash is then considered as a special character, telling R that the next character should be considered as a normal character, not as a special character. So in this case, the backslash should just be printed. Since we need two backslashes, we have to do that twice. I know, it sounds complicated, but it&#39;s quite similar to the percentage sign in LaTex. You can&#39;t just write % because this tells LaTex that it should be a comment. To actually get the percentage sign, you have to write \%.</li>
+</ol>
+
+<p>OK, now we have the basics, so let&#39;s actually produce a nice table. In R, you need to load the <strong>xtable</strong> package and in LaTex, you need to load the <strong>booktabs</strong> package. Also, I use the package <strong>caption</strong>; otherwise, the caption is too close to the table. </p>
+
+<p>Now imagine we want to compare three different regression models (rows) and want to print in the columns the $\alpha$, the $\beta$, the t-value of the $\beta$ coefficient, and the adjusted $R^2$. With randomly drawn data, our minimal example looks like this. </p>
+
+<p>Here is the source code of the minimal example. Save it as a .Rnw file, <em>knit</em> that file and you should get a nice <a href="/replicating/assets/twitter/media/Tables_in_R/Minimal_example.pdf">PDF</a>.</p>
+
+<pre><code class="r">\begin{document}
+
+Here is our minimal example:
+
+&lt;&lt;Code_chunk_Minimal_example, results=&#39;asis&#39;, echo=FALSE&gt;&gt;=
+library(xtable)
+#Just some random data
+x1 &lt;- rnorm(1000); x2 &lt;- rnorm(1000); x3 &lt;- rnorm(1000)
+y  &lt;- 2 + 1 *x1 + rnorm(1000)
+#Run regressions
+reg1 &lt;- summary(lm(y ~ x1))
+reg2 &lt;- summary(lm(y ~ x2))
+reg3 &lt;- summary(lm(y ~ x3))
+#Create data.frame
+df &lt;- data.frame(Model = 1:3,
+                 Alpha = c(reg1$coef[1,1], reg2$coef[1,1], reg3$coef[1,1]),
+                 Beta  = c(reg1$coef[2,1], reg2$coef[2,1], reg3$coef[2,1]),
+                 tV    = c(reg1$coef[2,2], reg2$coef[2,2], reg3$coef[2,2]),
+                 AdjR  = c(reg1$adj.r.s,  reg2$adj.r.s,   reg3$adj.r.s))
+strCaption &lt;- paste0(&quot;\\textbf{Table Whatever} This table is just produced with some&quot;,
+                     &quot;random data and does not mean anything. Just to show you how &quot;,
+                     &quot;things work.&quot;)
+print(xtable(df, digits=2, caption=strCaption, label=&quot;Test_table&quot;), 
+      size=&quot;footnotesize&quot;, #Change size; useful for bigger tables
+      include.rownames=FALSE, #Don&#39;t print rownames
+      include.colnames=FALSE, #We create them ourselves
+      caption.placement=&quot;top&quot;, 
+      hline.after=NULL, #We don&#39;t need hline; we use booktabs
+      add.to.row = list(pos = list(-1, 
+                                   nrow(df)),
+                        command = c(paste(&quot;\\toprule \n&quot;,
+                                          &quot;Model &amp; $\\alpha$ &amp; $\\beta$ &amp; t-value &amp; $R^2$ \\\\\n&quot;, 
+                                          &quot;\\midrule \n&quot;),
+                                    &quot;\\bottomrule \n&quot;)
+                        )
+      )
+</code></pre>
+
+
+  <div class="more">
+    <a href="/replicating/r/how-to-produce-nice-tables-in-pdfs-using-knitr-sweave-and-r" class="btn btn-small">read more..</a>
+  </div>
+</div>
+<div class="post">
+  <h3 class="title"><a href="/replicating/r/replicating-goyal-welch-2008">Replicating Goyal/Welch (2008)</a> <span class="date">2013-02-02</span></h3>
+
+  <h1 id="toc_0">Some theory</h1>
+
+<p>I created this blog because I replicate quite a few finance papers with R and I thought that some of you might profit from some of my work. Note, however, that I consider myself a mediocre R user! I&#39;m still one of those guys that uses Stackoverflow mainly for asking questions, not for answering them...so I&#39;m sure that my approach isn&#39;t always the most efficient one and if you have any comments on how to improve my code, let me know!</p>
+
+<p>OK, let&#39;s start with Goyal/Welch (2008): A Comprehensive Look at The Empirical Performance of Equity Premium Prediction, Review of Financial Studies. You find the paper and the data on Amit Goyal&#39;s <a href="http://www.hec.unil.ch/agoyal/">webpage</a>. That&#39;s what I love about finance research nowadays...data is available from the authors, so all you have to do is to download it and you can play around with it yourself.</p>
+
+<p>What&#39;s this paper all about? Well, there is a huge literature on &quot;return predictability&quot;: you take a predictor, such as the dividend-price ratio or the consumption-wealth ratio, and you try to forecast future excess returns with it. Note that the very idea of return predictability is a paradigm change from the early days, when the random-walk hypothesis implied stock returns that are close to unpredictable. Nowadays, economists argue that stock returns have to be predictable. Why? One big reason is that we have a changing price-dividend ratio over time. If future dividend growth and expected returns were i.i.d., the price-dividend ratio would have to be constant. Thus a changing price-dividend ratio means that one of the two must be forecastable; and research indicates that returns should be the more relevant part here. To read more about that topic, check out chapter 20 in Cochrane (2005, Asset Pricing)  or his <a href="http://faculty.chicagobooth.edu/john.cochrane/research/papers/afa_pres_speech.pdf">presidential address</a> to the AFA. </p>
+
+<p>As already mentioned, there are now tons of papers that deal with return predictability. Goyal/Welch point out that the literature has become so big, with many different predictors, methods, and data sets, that it is quite tough to absorb. Hence, the goal of their article (taken from Goyal/Welch, 2008, p. 1456)</p>
+
+<blockquote>
+<p>is to comprehensively re-examine the empirical evidence as of early 2006, evaluating each variable using the same methods (mostly, but not only, in linear models), time-periods, and estimation frequencies. The evidence suggests that most models are unstable or even spurious. Most models are no longer signiﬁcant even insample (IS), and the few models that still are usually fail simple regression diagnostics. Most models have performed poorly for over 30 years IS. For many models, any earlier apparent statistical signiﬁcance was often based exclusively on years up to and especially on the years of the Oil Shock of 1973–1975. Most models have poor out-of-sample (OOS) performance, but not in a way that merely suggests lower power than IS tests. They predict poorly late in the sample, not early in the sample. (For many variables, we have difﬁculty ﬁnding robust statistical signiﬁcance even when they are examined only during their most favorable contiguous OOS sub-period.) Finally, the OOS performance is not only a useful model diagnostic for the IS regressions but also interesting in itself for an investor who had sought to use these models for market-timing. Our evidence suggests that the models would not have helped such an investor.</p>
+
+<p>Therefore, although it is possible to search for, to occasionally stumble upon, and then to defend some seemingly statistically signiﬁcant models, we interpret our results to suggest that a healthy skepticism is appropriate when it comes to predicting the equity premium, at least as of early 2006. The models do not seem robust. </p>
+</blockquote>
+
+<h1 id="toc_1">Replication</h1>
+
+<p>In my opinion, the most interesting part about this paper is that they don&#39;t bother to look at any regression coefficients. So the results are very different from what you usually see in such papers. Basically, they just look at the mean squared errors (MSE) (from Wikipedia: In statistics, the mean squared error (MSE) of an estimator is one of many ways to quantify the difference between values implied by an estimator and the true values of the quantity being estimated. MSE is a risk function, corresponding to the expected value of the squared error loss or quadratic loss. MSE measures the average of the squares of the errors.) and transform the MSE to several useful statistics:</p>
+
+<p><div></p>
+
+<p>$$
+\begin{aligned}
+R^2   &amp;= 1 - \frac{MSE<em>A}{MSE</em>N} \
+\Delta RMSE &amp;= \sqrt{MSE<em>N} - \sqrt{MSE</em>A}\
+\end{aligned}
+$$</p>
+
+<p>where $h$ is the degree of overlap ($h=1$ for no overlap). Note that $MSE<em>N=E[e</em>N^2]$ and $MSE<em>A=E[e</em>A^2]$, where $e<em>N$ denote the vector of rolling OOS errors from the historical mean model and $e</em>A$ denote the vector of rolling OOS from the OLS model. Now, this is very important so let&#39;s think about this for a while: many scholars within the return predictability literature argue that a bunch of variables forecast equity premiums. Goyal/Welch (2008) now use the same test with the same time period for all those variables and compare it to the simplest of all forecasting techniques: the simple historic average.</p>
+
+<p>Note, however, that these statistics only apply to the OOS tests. For the IS tests, $R^2$ is just the R squared you know from a linear regression, and $\overline{R}^2$ is the adjusted one.</p>
+
+
+  <div class="more">
+    <a href="/replicating/r/replicating-goyal-welch-2008" class="btn btn-small">read more..</a>
+  </div>
+</div>
+
+<div class="pagination">
+  <ul>
+      <li class="active"><a href="/replicating">1</a></li>
+  </ul>
+</div>
+
+  </div>
+</div>
+
+      </div>
+
+      <hr>
+      <div class="footer">
+        <p>&copy; Christoph Jäckel 2013
+          with help from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+      </div>
+
+    </div> <!-- /container -->
+
+    <!-- Google Prettify -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/prettify/188.0.0/prettify.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+<!-- end Google Prettify -->
+    <script>
+  var _gaq=[['_setAccount','UA-123-12'],['_trackPageview']];
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+  s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+    <!-- INSERT MATHJAX CONFIGURATION FROM MATH.STACKEXCHANGE -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+<script type="text/javascript"
+src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  </body>
+</html>

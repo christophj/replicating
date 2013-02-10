@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Replicating Goyal/Welch (2008)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Christoph Jäckel">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/replicating/assets/twitter/stylesheets/bootstrap.min.css?0.36172508203218934" type="text/css" rel="stylesheet" media="all">
+<link href="/replicating/assets/twitter/stylesheets/style.css?0.5724627553791692" type="text/css" rel="stylesheet" media="all">
+<link href="/replicating/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css?0.8249275709169676" type="text/css" rel="stylesheet" media="all">
+
+    
+
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-narrow">
+          <a class="brand" href="/replicating/">Replicating</a>
+          <ul class="nav">
+              
+                <li><a href="/replicating/archive">Archive</a></li>
+              
+              
+                <li><a href="/replicating/tags">Tags</a></li>
+              
+              
+                <li><a href="/replicating/categories">Categories</a></li>
+              
+              
+                <li><a href="/replicating/pages">Pages</a></li>
+              
+              
+                <li><a href="/replicating/about">About me and this blog</a></li>
+              
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-narrow">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>Replicating Goyal/Welch (2008) </h1>
+</div>
+
+<div class="row-fluid post-full">
+  <div class="span12">
+    <div class="date">
+      <span>2013-02-02</strong>
+    </div>
+    <div class="content">
+      <h1 id="toc_0">Some theory</h1>
+
+<p>I created this blog because I replicate quite a few finance papers with R and I thought that some of you might profit from some of my work. Note, however, that I consider myself a mediocre R user! I&#39;m still one of those guys that uses Stackoverflow mainly for asking questions, not for answering them...so I&#39;m sure that my approach isn&#39;t always the most efficient one and if you have any comments on how to improve my code, let me know!</p>
+
+<p>OK, let&#39;s start with Goyal/Welch (2008): A Comprehensive Look at The Empirical Performance of Equity Premium Prediction, Review of Financial Studies. You find the paper and the data on Amit Goyal&#39;s <a href="http://www.hec.unil.ch/agoyal/">webpage</a>. That&#39;s what I love about finance research nowadays...data is available from the authors, so all you have to do is to download it and you can play around with it yourself.</p>
+
+<p>What&#39;s this paper all about? Well, there is a huge literature on &quot;return predictability&quot;: you take a predictor, such as the dividend-price ratio or the consumption-wealth ratio, and you try to forecast future excess returns with it. Note that the very idea of return predictability is a paradigm change from the early days, when the random-walk hypothesis implied stock returns that are close to unpredictable. Nowadays, economists argue that stock returns have to be predictable. Why? One big reason is that we have a changing price-dividend ratio over time. If future dividend growth and expected returns were i.i.d., the price-dividend ratio would have to be constant. Thus a changing price-dividend ratio means that one of the two must be forecastable; and research indicates that returns should be the more relevant part here. To read more about that topic, check out chapter 20 in Cochrane (2005, Asset Pricing)  or his <a href="http://faculty.chicagobooth.edu/john.cochrane/research/papers/afa_pres_speech.pdf">presidential address</a> to the AFA. </p>
+
+<p>As already mentioned, there are now tons of papers that deal with return predictability. Goyal/Welch point out that the literature has become so big, with many different predictors, methods, and data sets, that it is quite tough to absorb. Hence, the goal of their article (taken from Goyal/Welch, 2008, p. 1456)</p>
+
+<blockquote>
+<p>is to comprehensively re-examine the empirical evidence as of early 2006, evaluating each variable using the same methods (mostly, but not only, in linear models), time-periods, and estimation frequencies. The evidence suggests that most models are unstable or even spurious. Most models are no longer signiﬁcant even insample (IS), and the few models that still are usually fail simple regression diagnostics. Most models have performed poorly for over 30 years IS. For many models, any earlier apparent statistical signiﬁcance was often based exclusively on years up to and especially on the years of the Oil Shock of 1973–1975. Most models have poor out-of-sample (OOS) performance, but not in a way that merely suggests lower power than IS tests. They predict poorly late in the sample, not early in the sample. (For many variables, we have difﬁculty ﬁnding robust statistical signiﬁcance even when they are examined only during their most favorable contiguous OOS sub-period.) Finally, the OOS performance is not only a useful model diagnostic for the IS regressions but also interesting in itself for an investor who had sought to use these models for market-timing. Our evidence suggests that the models would not have helped such an investor.</p>
+
+<p>Therefore, although it is possible to search for, to occasionally stumble upon, and then to defend some seemingly statistically signiﬁcant models, we interpret our results to suggest that a healthy skepticism is appropriate when it comes to predicting the equity premium, at least as of early 2006. The models do not seem robust. </p>
+</blockquote>
+
+<h1 id="toc_1">Replication</h1>
+
+<p>In my opinion, the most interesting part about this paper is that they don&#39;t bother to look at any regression coefficients. So the results are very different from what you usually see in such papers. Basically, they just look at the mean squared errors (MSE) (from Wikipedia: In statistics, the mean squared error (MSE) of an estimator is one of many ways to quantify the difference between values implied by an estimator and the true values of the quantity being estimated. MSE is a risk function, corresponding to the expected value of the squared error loss or quadratic loss. MSE measures the average of the squares of the errors.) and transform the MSE to several useful statistics:</p>
+
+<div>
+
+$$
+\begin{aligned}
+R^2   &= 1 - \frac{MSE_A}{MSE_N} \\
+\Delta RMSE &= \sqrt{MSE_N} - \sqrt{MSE_A}\\
+\end{aligned}
+$$
+
+where $h$ is the degree of overlap ($h=1$ for no overlap). Note that $MSE_N=E[e_N^2]$ and $MSE_A=E[e_A^2]$, where $e_N$ denote the vector of rolling OOS errors from the historical mean model and $e_A$ denote the vector of rolling OOS from the OLS model. Now, this is very important so let's think about this for a while: many scholars within the return predictability literature argue that a bunch of variables forecast equity premiums. Goyal/Welch (2008) now use the same test with the same time period for all those variables and compare it to the simplest of all forecasting techniques: the simple historic average.
+
+Note, however, that these statistics only apply to the OOS tests. For the IS tests, $R^2$ is just the R squared you know from a linear regression, and $\overline{R}^2$ is the adjusted one.
+
+</div>
+
+<h2 id="toc_2">Data</h2>
+
+<p>The data is taken from Amit Goyal&#39;s <a href="http://www.hec.unil.ch/agoyal/">webpage</a>. There is an updated version from 2010. However, I&#39;m using the original data from 2005, so I can easily control the correctness of my computations. Also, I repeat some definitions of the appendix here:</p>
+
+<ul>
+<li>Stock Variance (<strong>svar</strong>): Stock Variance is computed as sum of squared daily returns on S&amp;P 500. Daily returns for 1871 to 1926 are obtained from Bill Schwert while daily returns from 1926 to 2005 are obtained from CRSP</li>
+<li>Cross-Sectional Premium (<strong>csp</strong>): The cross-sectional beta premium measures the relative valuations of high- and low-beta stocks. We obtained this variable directly from Sam Thompson. This variable is available from May 1937 to December 2002</li>
+<li>NetEquity Expansion (<strong>ntis</strong>) is the ratio of twelve-month moving sums of net issues by NYSE listed stocks divided by the total market capitalization of NYSE stocks</li>
+<li>Long Term Yield (<strong>lty</strong>): Long-term government bond yields for the period 1919 to 1925 is the U.S. Yield On Long-Term United States Bonds series from NBER’s Macrohistory database. Yields from 1926 to 2005 are from Ibbotson’s Stocks, Bonds, Bills and Inﬂation Yearbook</li>
+<li>Long Term Rate of Return (<strong>ltr</strong>): Long-term government bond returns for the period 1926 to 2005 are from Ibbotson’s Stocks, Bonds, Bills and Inﬂation Yearbook</li>
+<li>The Term Spread (<strong>tms</strong>) is the diﬀerence between the long term yield on government bonds and the T-bill</li>
+<li>Inﬂation (<strong>inﬂ</strong>): Inﬂation is the Consumer Price Index (All Urban Consumers) for the period 1919 to 2005 from the Bureau of Labor Statistics. Because inﬂation information is released only in the following month, in our monthly regressions, we inserted one month of waiting before use Inﬂation (inﬂ): Inﬂation is the Consumer Price Index (All Urban Consumers) for the period 1919 to 2005 from the Bureau of Labor Statistics. Because inﬂation information is released only in the following month, in our monthly regressions, we inserted one month of waiting before use.</li>
+</ul>
+
+<p>The monthly, quarterly, and annual data is saved in one Excel file. To read that into R, I have split this excel file into three CSV-files. Now it&#39;s easy to read them in. Also, I convert them into <strong>data.tables</strong> because I prefer to work with them instead of <strong>data.frames</strong>. Finally, I use the package <strong>lubridate</strong> to convert the column <em>Datum</em> into a date. You have to name this column yourself in the CSV-file!</p>
+
+<pre><code class="r">library(data.table)
+library(ggplot2)
+library(lubridate)
+library(dyn)
+library(reshape2)
+monthly &lt;- read.csv2(&quot;/home/christoph/Dropbox/FinanceIssues/ReturnPredictability/Data/monthly_2005.csv&quot;, 
+                     na.strings=&quot;NaN&quot;, stringsAsFactors=FALSE)
+annual  &lt;- read.csv2(&quot;/home/christoph/Dropbox/FinanceIssues/ReturnPredictability/Data/annual_2005.csv&quot;, 
+                     na.strings=&quot;NaN&quot;, stringsAsFactors=FALSE)
+monthly &lt;- as.data.table(monthly)
+annual  &lt;- as.data.table(annual)
+monthly &lt;- monthly[, Datum := ymd(Datum)]
+</code></pre>
+
+<p>First of all, we have to compute the dividend price ratio (d/p) and the dividend yield (d/y). They are defined as the difference between the log of dividends and the log of prices and as the difference between the log of dividends and the log of <em>lagged</em> prices. Also, we have to compute the equity premium as the difference of the S&amp;P returns and the risk-free rate. A few things to notice here:</p>
+
+<ul>
+<li>It took me a while to get the same summary statistics as in Goyal/Welch (2008). A few problems here: Goyal always provides updated data on his website. The problem with this data is that it not only adds new data points, but it also changes the historical data. For instance, the dividends were slightly adjusted. Hence, to get the same results as in Goyal/Welch (2008), you have to use the original data set.</li>
+<li>Also, you have to figure out if everything is defined in simple or log returns. They explain it in table 1 of their 2003 Management Science paper (&quot;Predicting the Equity Premium with Dividend Ratios&quot;) more clearly: &quot;(The expected return) $Rm(t)$ is the log of the total return on the value-weighted stock market from year $t-1$ to $t$. (The equity premium) $EQP(t)$ subtracts the equivalent log return on a three-month treasury bill. $DP(t)$ is the dividend-price ratio, i.e., the log of aggregate dividends $D(t)$ divided by the aggregate stock market value $P(t)$. $DY(t)$, the dividend-yield ratio, divides by $P(t-1)$ instead... All variables are in percentages.&quot;</li>
+<li>The rest is try and error. Doing so, you will find out that the risk-free rate is provided in simple, not log returns, so you have to do that yourself.</li>
+</ul>
+
+<p>So let&#39;s calculate the relevant variables, i.e. the log equity premium (<em>rp_div</em>), dividend-price ratio (<em>dp</em>), and the dividend yield (<em>dy</em>), and plot them over time:</p>
+
+<pre><code class="r">annual &lt;- annual[, IndexDiv := Index + D12]
+annual &lt;- annual[, dp := log(D12) - log(Index)]
+annual &lt;- annual[, ep := log(E12) - log(Index)]
+vec_dy &lt;- c(NA, annual[2:nrow(annual), log(D12)] - annual[1:(nrow(annual)-1), log(Index)])
+annual &lt;- annual[, dy := vec_dy]
+annual &lt;- annual[, logret   :=c(NA,diff(log(Index)))]
+vec_logretdiv &lt;- c(NA, annual[2:nrow(annual), log(IndexDiv)] - annual[1:(nrow(annual)-1), log(Index)])
+vec_logretdiv &lt;- c(NA, log(annual[2:nrow(annual), IndexDiv]/annual[1:(nrow(annual)-1), Index]))
+annual &lt;- annual[, logretdiv:=vec_logretdiv]
+annual &lt;- annual[, logRfree := log(Rfree + 1)]
+annual &lt;- annual[, rp_div   := logretdiv - logRfree]
+#Put it in time series (is needed in function get_statistics)
+ts_annual &lt;- ts(annual, start=annual[1, Datum], end=annual[nrow(annual), Datum])
+plot(ts_annual[, c(&quot;rp_div&quot;, &quot;dp&quot;, &quot;dy&quot;)])
+</code></pre>
+
+<p><img src="/replicating/assets/twitter/media/Goyal-Welch/Compute_DP_and_DY.png" alt="plot of chunk Compute_DP_and_DY"> </p>
+
+<p>This yields exactly the same equity premia as in Goyal/Welch (2008, p. 1457), more precisely a mean (standard deviation) of the log equity risk premium of 4.84% (17.79%) for the complete sample from 1872 to 2005; of 6.04% (19.17%) from 1927 to 2005; and of 6.04% (15.70%) from 1965 to 2005.</p>
+
+<p>Also, a look at the figure is interesting, which replicates figure 1 from Goyal/Welch (2003). They write &quot;... that there is some nonstationarity in the dividend ratios. The dividend ratios are almost random walks, while the equity premia are almost i.i.d. Not surprisingly, the augmented Dickey and Fuller (1979) test indicates that over the entire sample period, we cannot reject that the dividend ratios contain a unit-root (see Stambaugh 1999 and Yan 1999).&quot;</p>
+
+<h2 id="toc_3">Define function</h2>
+
+<p>Next, we want to replicate the plots in Goyal/Welch (2008), i.e. we plot the cumulative squared predictions errors of the NULL (simple average mean) minus the cumulative squared prediction error of the ALTERNATIVE, where the ALTERNATIVE is a model that relies on a predictive variable to forecast the equity premium. We also give some summary statistics.</p>
+
+<p>This is all done in one function. This function takes a <strong>data.frame</strong> (note that a <strong>data.table</strong> is just a <strong>data.frame</strong>) (<em>ts_df</em>), the independent variable (<em>indep</em>), the dependent variable (<em>dep</em>), the degree of overlap (<em>h</em>), the start year (<em>start</em>) , the end year (<em>end</em>), and the initial periods to estimate the OOS statistics (<em>est_periods_OOS</em>). The base case here is 20 periods which means that we need 20 years initially to make our first prediction.</p>
+
+<p>A few comments on the function (I hope the rest is self-explanatory, otherwise leave a comment):</p>
+
+<ul>
+<li>The function <strong>window</strong> expects a time-series. This is why we called the function <strong>ts</strong> further above. The function <strong>window</strong> is quite convenient in subsetting a data set based on the date.</li>
+<li>The package <strong>dyn</strong> is used to easily run regressions with a lagged variable.</li>
+<li>In general, the lines in which I call functions like <strong>eval</strong>, <strong>parse</strong>, etc. might be quite confusing. This looks quite complicated, but allows me to select the variables in <em>ts_df</em> dynamically. I&#39;m confused about how this actually works myself, so for me it&#39;s mostly try and error. Hadley Wickham&#39;s <a href="https://github.com/hadley/devtools/wiki/Evaluation">webpage</a> is quite helpful though.</li>
+</ul>
+
+<pre><code class="r">get_statistics &lt;- function(ts_df, indep, dep, h=1, start=1872, end=2005, est_periods_OOS = 20) {
+
+  #### IS ANALYSIS
+
+  #1. Historical mean model
+  avg   &lt;- mean(window(ts_df, start, end)[, dep], na.rm=TRUE)
+  IS_error_N &lt;- (window(ts_df, start, end)[, dep] - avg)
+
+  #2. OLS model
+  reg &lt;- dyn$lm(eval(parse(text=dep)) ~ lag(eval(parse(text=indep)), -1), 
+                data=window(ts_df, start, end))
+  IS_error_A &lt;- reg$residuals
+  ### 
+
+  ####OOS ANALYSIS
+  OOS_error_N &lt;- numeric(end - start - est_periods_OOS)
+  OOS_error_A &lt;- numeric(end - start - est_periods_OOS)
+  #Only use information that is available up to the time at which the forecast is made
+  j &lt;- 0
+  for (i in (start + est_periods_OOS):(end-1)) {
+    j &lt;- j + 1
+    #Get the actual ERP that you want to predict
+    actual_ERP &lt;- as.numeric(window(ts_df, i+1, i+1)[, dep])
+
+    #1. Historical mean model
+    OOS_error_N[j] &lt;- actual_ERP - mean(window(ts_df, start, i)[, dep], na.rm=TRUE)
+
+    #2. OLS model
+    reg_OOS &lt;- dyn$lm(eval(parse(text=dep)) ~ lag(eval(parse(text=indep)), -1), 
+                      data=window(ts_df, start, i))
+    #Compute_error
+    df &lt;- data.frame(x=as.numeric(window(ts_df, i, i)[, indep]))
+    names(df) &lt;- indep
+    pred_ERP   &lt;- predict.lm(reg_OOS, newdata=df)
+    OOS_error_A[j] &lt;-  pred_ERP - actual_ERP
+
+  }
+
+
+  #Compute statistics 
+  MSE_N &lt;- mean(OOS_error_N^2)
+  MSE_A &lt;- mean(OOS_error_A^2)
+  T &lt;- length(!is.na(ts_df[, dep]))
+  OOS_R2  &lt;- 1 - MSE_A/MSE_N
+  #Is the -1 enough (maybe -2 needed because of lag)?
+  OOS_oR2 &lt;- OOS_R2 - (1-OOS_R2)*(reg$df.residual)/(T - 1) 
+  dRMSE &lt;- sqrt(MSE_N) - sqrt(MSE_A)
+  ##
+
+  #### CREATE PLOT
+  IS  &lt;- cumsum(IS_error_N[2:length(IS_error_N)]^2)-cumsum(IS_error_A^2)
+  OOS &lt;- cumsum(OOS_error_N^2)-cumsum(OOS_error_A^2)
+  df  &lt;- data.frame(x=seq.int(from=start + 1 + est_periods_OOS, to=end), 
+                    IS=IS[(1 + est_periods_OOS):length(IS)], 
+                    OOS=OOS) #Because you lose one observation due to the lag
+  #Shift IS errors vertically, so that the IS line begins 
+  # at zero on the date of first OOS prediction. (see Goyal/Welch (2008, p. 1465))
+  df$IS &lt;- df$IS - df$IS[1] 
+  df  &lt;- melt(df, id.var=&quot;x&quot;) 
+  plotGG &lt;- ggplot(df) + 
+    geom_line(aes(x=x, y=value,color=variable)) + 
+    geom_rect(data=data.frame(),#Needed by ggplot2, otherwise not transparent
+              aes(xmin=1973, xmax=1975,ymin=-0.2,ymax=0.2), 
+              fill=&#39;red&#39;,
+              alpha=0.1) + 
+    scale_y_continuous(&#39;Cumulative SSE Difference&#39;, limits=c(-0.2, 0.2)) + 
+    scale_x_continuous(&#39;Year&#39;)
+  ##
+
+  return(list(IS_error_N = IS_error_N,
+              IS_error_A = reg$residuals,
+              OOS_error_N = OOS_error_N,
+              OOS_error_A = OOS_error_A,
+              IS_R2 = summary(reg)$r.squared, 
+              IS_aR2 = summary(reg)$adj.r.squared, 
+              OOS_R2  = OOS_R2,
+              OOS_oR2 = OOS_oR2,
+              dRMSE = dRMSE,
+              plotGG = plotGG))
+
+}
+</code></pre>
+
+<p>Now, we can easily replicate the plots in Goyal/Welch (2008). All we need to do is type two lines of code. Let&#39;s start!</p>
+
+<h2 id="toc_4">In-sample analysis (IS)</h2>
+
+<h3 id="toc_5">Dividend-price ratio</h3>
+
+<pre><code class="r">dp_stat &lt;- get_statistics(ts_annual, &quot;dp&quot;, &quot;rp_div&quot;, start=1872)
+dp_stat$plotGG
+</code></pre>
+
+<p>Just a short explanation on that second line of code. My function does not only return a plot, but also additional statistics. You can see that in the function at the very end when a list is returned. One element of that list is called <em>plotGG</em> and this one stores the <strong>ggplot2</strong> plot. But you can also get other objects of the list. For instance, if you want to get IS $\overline{R}^2$, just type <em>dp_stat$IS_aR2</em> into your R console.</p>
+
+<p><img src="/replicating/assets/twitter/media/Goyal-Welch/IS_dp.png" alt="plot of chunk IS_dp"> </p>
+
+<p>This figure looks almost exactly like the chart in Figure 1 of Goyal/Welch (2008). The only difference I notice is that both of their IS and OOS prediction are a little higher than mine. Also, my $\overline{R}^2$ is 0.48% and they have 0.49%.</p>
+
+<h3 id="toc_6">Dividend-yield</h3>
+
+<pre><code class="r">dy_stat &lt;- get_statistics(ts_annual, &quot;dy&quot;, &quot;rp_div&quot;, start=1872)
+dy_stat$plotGG
+</code></pre>
+
+<p><img src="/replicating/assets/twitter/media/Goyal-Welch/IS_dy.png" alt="plot of chunk IS_dy"> </p>
+
+<p>Statistics: $\overline{R}^2$, which is 0.90% and 0.91% for them.</p>
+
+<h3 id="toc_7">Earnings-price ratio</h3>
+
+<pre><code class="r">ep_stat &lt;- get_statistics(ts_annual, &quot;ep&quot;, &quot;rp_div&quot;, start=1872)
+ep_stat$plotGG
+</code></pre>
+
+<p><img src="/replicating/assets/twitter/media/Goyal-Welch/IS_ep.png" alt="plot of chunk IS_ep"> </p>
+
+<p>Statistics: $\overline{R}^2$, which is 1.10% and 1.08% for them.</p>
+
+<div>
+
+So this post showed you how to reproduce the plots of Goyal/Welch (2008) with R. Note that this post is meant to show you how easily this can be done with R, not to replicate exactly the statistics in their paper. A few things are off (plots are not exactly identical, $\overline{R_{IS}}^2$ is not always correct, my $\overline{R_{OOS}}^2$ is wrong), but since I get basically the same results as they do, I don't have the motivation right now to figure out where the really small deviations are coming from. Feel free to tell me if you figure it out, though.
+
+</div>
+
+    </div>
+    <ul class="tag_box inline">
+      <li><i class="icon-folder-open"></i></li>
+      <li>
+        <a href="/replicating/categories#R-ref">R <span>3</span></a>
+      </li>
+      <li>
+        <a href="/replicating/categories#finance-ref">finance <span>2</span></a>
+      </li>
+    </ul>
+    <ul class="tag_box inline">
+      <li><i class="icon-tags"></i></li>
+      <li>
+        <a href="/replicating/tags#R-ref">R <span>3</span></a>
+      </li>
+      <li>
+        <a href="/replicating/tags#replicating-ref">replicating <span>2</span></a>
+      </li>
+      <li>
+        <a href="/replicating/tags#finance-ref">finance <span>2</span></a>
+      </li>
+      <li>
+        <a href="/replicating/tags#return predictability-ref">return predictability <span>2</span></a>
+      </li>
+    </ul>
+    <hr>
+    <div class="pagination">
+      <ul>
+          <li class="prev disabled"><a>&larr; Previous</a></li>
+
+          <li><a href="/replicating/archive">Archive</a></li>
+
+          <li class="next"><a href="/replicating/r/how-to-produce-nice-tables-in-pdfs-using-knitr-sweave-and-r" title="How to produce nice tables in PDFs using knitr/Sweave and R">Next &rarr;</a></li>
+      </ul>
+    </div>
+    <hr>
+    <div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+</div>
+
+
+      </div>
+
+      <hr>
+      <div class="footer">
+        <p>&copy; Christoph Jäckel 2013
+          with help from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+      </div>
+
+    </div> <!-- /container -->
+
+    <!-- Google Prettify -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/prettify/188.0.0/prettify.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+<!-- end Google Prettify -->
+    <script>
+  var _gaq=[['_setAccount','UA-123-12'],['_trackPageview']];
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+  s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+    <!-- INSERT MATHJAX CONFIGURATION FROM MATH.STACKEXCHANGE -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+<script type="text/javascript"
+src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  </body>
+</html>
