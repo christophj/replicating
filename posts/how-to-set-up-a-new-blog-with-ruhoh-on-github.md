@@ -56,12 +56,18 @@ Before I run those commands though, I pushed all my blog files to github as well
   
 Obviously, you have to replace USER with your github username and REPO with the repository that you have created before on the github.com website. If you do this, you should see all the files pushed to github.com and it should look similar to my [repository](https://github.com/christophj).
 
+Google analytics
+-------------------------
+
+Setting up Google Analytics is straightforward. Just set up Analytics on Google's [webpage](google.com/analytics). You should then get a tracking number that you have to enter into the *config.yml* file in the **widget** folder of your blog. 
+
+Now it is important to push those updated to `github` again and wait. It took a day or so for me until Google started tracking my blog.
+
 Next steps
 -------------------------
 
 The next steps I'm playing are the following:
 
-* Get Google analytics to run.
 * Change the look of the code snippets. I don't really like the gray, it looks too pale.
 
 If I figure those things out, I update this post here.

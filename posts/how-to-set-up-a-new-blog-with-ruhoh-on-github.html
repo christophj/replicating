@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>tags: [tutorial]</title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+
+
+
+
+</head>
+
+<body>
+<hr/>
+
+<p>title: How to set up a new blog with ruhoh on github
+date: &#39;2013-02-10&#39;
+description:
+categories: &#39;tutorial&#39;</p>
+
+<h2>tags: [tutorial]</h2>
+
+<p>Since it took me quite some effort to get this blog running, I give a short summary of the steps I went through. Note, however, that I am really a beginner at this, so I only point you to those links that helped me. Don&#39;t even bother to ask me when something doesn&#39;t work. Not that I wouldn&#39;t want to help&hellip;I just couldn&#39;t. Oh, and just to be clear: this guide assumes that you are using Linux.</p>
+
+<h2>Get ruhoh running</h2>
+
+<p><a href="http://ruhoh.com/">ruhoh</a> is a static blogging platform. Why would you want to use that in the first place? Good question! The point is that I wanted to publish some of my replications of finance papers and for that I wanted to be able to write both formulas and code snippets. Turns out that this isn&#39;t so easy with normal blogging platforms. For instance, I signed up for Bloggers from Google and couldn&#39;t get it to work. I wasn&#39;t able to get <code>mathjax</code> to run.</p>
+
+<p>So after some research, I found <a href="http://jekyllbootstrap.com/">Jekyll/Bootstrap</a>, which seemed to do what I wanted. However, on that webpage the maintainer wrote that he now focused his efforts on <code>ruhoh</code> instead, so I thought that I might as well just do that. Note that <code>ruhoh</code> is quite new though, so <code>Jekyll</code> is definitely better documented.</p>
+
+<p>Anyways, to get <code>ruhoh</code> running, just follow the <a href="https://github.com/ruhoh/blog/tree/2.0.alpha#readme">installer guide</a>. It looks pretty straightforward, but I had to deal with the issue that there are a lot of dependencies. I can&#39;t all memorize them now, but my workflow was something like this:</p>
+
+<ol>
+<li>Write command from installer guide into terminal.</li>
+<li>Get message on why this failed (<em>xyz</em> is missing).</li>
+<li>Googling message.</li>
+<li>Dealing with it (mostly just installing <em>xyz</em>, which often also needed <em>abc</em>, etc.)</li>
+</ol>
+
+<p>So after that was done, you should have a folder somewhere in your  folder structure with all the subfolder copied from Jade&#39;s github page. To check if it worked out, fire up a terminal, go to the folder you copied everything into, and type:</p>
+
+<pre><code>$ bundle exec rackup -p 9292
+</code></pre>
+
+<p>This starts a web server that hosts your blog here: <a href="http://localhost:9292">http://localhost:9292</a>. So basically, you can check out your blog in the browser. Now you can edit all the posts and play around.</p>
+
+<h2>Install mathjax</h2>
+
+<p>You have to install a <code>mathjax</code> widget, which sounds more complicated than it is. Your folder structure should have one folder named <em>widgets</em>. In this folder, add another folder named <em>mathjax</em>, and a subfolder named <em>layouts</em> and copy <a href="https://github.com/ramnathv/ramnathv.ruhoh.com/blob/master/widgets/mathjax/layouts/mathjax.html">this file</a> into the <em>layouts</em> folder. Actually, if you check out that file online, you also see the folder structure it has to be into.</p>
+
+<p>Now you should be able to write equations in LaTex. In-text math should be surrounded with $ signs, equations in a separate line with double dollar signs. To check if it worked, copy this <a href="https://gist.github.com/plusjade/2699636">sample file</a> into your pages folder and check it out in your localhost session. </p>
+
+<p>The only issue I had was that I couldn&#39;t use underscores, which are quite important in LaTex. However, this <a href="http://stackoverflow.com/questions/10438937/is-there-a-markdown-parser-supported-on-jekyll-that-plays-nicely-with-mathjax">SO post</a> solved this problem.</p>
+
+<h2>Deploying your blog on github</h2>
+
+<p>If you are happy with how your blog looks locally, it&#39;s time to move it to the world wide web. You could find a good web hoster or you could decide to just use Github pages: it&#39;s for free and your already use github (otherwise you couldn&#39;t have installed <code>ruhoh</code>). Here&#39;s just my personal rant though: the Github pages documentation is really bad. Seriously, I wouldn&#39;t call it a documentation at all. It&#39;s a bunch of FAQs that don&#39;t give you any big picture at all. To be fair, it&#39;s probably written for the average github user who is already quite familiar with this service. Sadly, I&#39;m not&hellip;</p>
+
+<p>However, <a href="https://github.com/ramnathv">Ramnath Vaidyanathan</a> rescued me again (he also posted the Mathjax-widget code). Just  follow these <a href="https://gist.github.com/ramnathv/3890278">instructions</a> and you should be able to get your blog online. As you can see at the link, I haven&#39;t quite figured out how to run the makefile, so I just type the commands into the terminal manually. However, this should be easy to figure out, but I postpone that to later.</p>
+
+<p>Before I run those commands though, I pushed all my blog files to github as well. I&#39;m not sure if this is necessary, but I did it anyways. To do so, you have to run the following commands in the working directory where your blog is saved:</p>
+
+<pre><code>$ git init
+$ git add .
+$ git commit -m &quot;First commit to blog.&quot;
+$ git remote add origin git@github.com:USER/REPO.git
+$ git push -u origin master
+</code></pre>
+
+<p>Obviously, you have to replace USER with your github username and REPO with the repository that you have created before on the github.com website. If you do this, you should see all the files pushed to github.com and it should look similar to my <a href="https://github.com/christophj">repository</a>.</p>
+
+<h2>Google analytics</h2>
+
+<p>Setting up Google Analytics is straightforward. Just set up Analytics on Google&#39;s <a href="google.com/analytics">webpage</a>. You should then get a tracking number that you have to enter into the <em>config.yml</em> file in the <strong>widget</strong> folder of your blog. </p>
+
+<p>Now it is important to push those updated to <code>github</code> again and wait. It took a day or so for me until Google started tracking my blog.</p>
+
+<h2>Next steps</h2>
+
+<p>The next steps I&#39;m playing are the following:</p>
+
+<ul>
+<li>Get Google analytics to run.</li>
+<li>Change the look of the code snippets. I don&#39;t really like the gray, it looks too pale.</li>
+</ul>
+
+<p>If I figure those things out, I update this post here.</p>
+
+</body>
+
+</html>
+
