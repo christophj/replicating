@@ -44,7 +44,22 @@ Deploying your blog on github
 
 If you are happy with how your blog looks locally, it's time to move it to the world wide web. You could find a good web hoster or you could decide to just use Github pages: it's for free and your already use github (otherwise you couldn't have installed `ruhoh`). Here's just my personal rant though: the Github pages documentation is really bad. Seriously, I wouldn't call it a documentation at all. It's a bunch of FAQs that don't give you any big picture at all. To be fair, it's probably written for the average github user who is already quite familiar with this service. Sadly, I'm not...
 
-However, [Ramnath Vaidyanathan](https://github.com/ramnathv) rescued me again (he also posted the Mathjax-widget code). Just  follow these [instructions](https://gist.github.com/ramnathv/3890278) and you should be able to get your blog online. As you can see at the link, I haven't quite figured out how to run the makefile, so I just type the commands into the terminal manually. However, this should be easy to figure out, but I postpone that to later.
+However, Ramnath Vaidyanathan rescued me again (he also posted the Mathjax-widget code) and posted instructions on how to deploy your blog on Github pages. However, the page is down now so I just post the code here.
+
+First, you have to compile your blog:
+
+    $ cd /PATH_OF_YOUR_BLOG
+    $ ruhoh compile
+    $ cd compiled
+    $ cd REPO (in my case: cd replicating)
+    $ git init .
+    $ git add .
+    $ git commit -m "update blog"
+    $ git push https://github.com/$USER/$REPO.git master:gh-pages --force
+    $ rm -rf .git
+    $ cd ../..
+    
+So you basically deploy the compiled version of your blog on `github` and then get rid of all traces. As Ramnath writes, it is not a good idea to put generated files under version control.
 
 Before I run those commands though, I pushed all my blog files to github as well. I'm not sure if this is necessary, but I did it anyways. To do so, you have to run the following commands in the working directory where your blog is saved:
 

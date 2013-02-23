@@ -12,12 +12,12 @@
     <![endif]-->
 
     <!-- Le styles -->
-    <link href="/replicating/assets/twitter/stylesheets/bootstrap.min.css?0.5893202667198209" type="text/css" rel="stylesheet" media="all">
-<link href="/replicating/assets/twitter/stylesheets/style.css?0.3062235299251017" type="text/css" rel="stylesheet" media="all">
-<link href="/replicating/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css?0.35112990158074175" type="text/css" rel="stylesheet" media="all">
+    <link href="/replicating/assets/twitter/stylesheets/bootstrap.min.css?0.07701227798538712" type="text/css" rel="stylesheet" media="all">
+<link href="/replicating/assets/twitter/stylesheets/style.css?0.24802352487564294" type="text/css" rel="stylesheet" media="all">
+<link href="/replicating/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css?0.8963839670445444" type="text/css" rel="stylesheet" media="all">
 
     
-
+    
 
     <!-- Le fav and touch icons -->
   <!-- Update these with your own images
@@ -117,12 +117,17 @@ $ git push -u origin master
 
 <p>Obviously, you have to replace USER with your github username and REPO with the repository that you have created before on the github.com website. If you do this, you should see all the files pushed to github.com and it should look similar to my <a href="https://github.com/christophj">repository</a>.</p>
 
-<h2 id="toc_3">Next steps</h2>
+<h2 id="toc_3">Google analytics</h2>
+
+<p>Setting up Google Analytics is straightforward. Just set up Analytics on Google&#39;s <a href="google.com/analytics">webpage</a>. You should then get a tracking number that you have to enter into the <em>config.yml</em> file in the <strong>widget</strong> folder of your blog. </p>
+
+<p>Now it is important to push those updated to <code>github</code> again and wait. It took a day or so for me until Google started tracking my blog.</p>
+
+<h2 id="toc_4">Next steps</h2>
 
 <p>The next steps I&#39;m playing are the following:</p>
 
 <ul>
-<li>Get Google analytics to run.</li>
 <li>Change the look of the code snippets. I don&#39;t really like the gray, it looks too pale.</li>
 </ul>
 
@@ -198,23 +203,5 @@ $ git push -u origin master
   g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
   s.parentNode.insertBefore(g,s)}(document,'script'));
 </script>
-    <!-- INSERT MATHJAX CONFIGURATION FROM MATH.STACKEXCHANGE -->
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  jax: ["input/TeX", "output/HTML-CSS"],
-  tex2jax: {
-    inlineMath: [ ['$', '$'] ],
-    displayMath: [ ['$$', '$$']],
-    processEscapes: true,
-    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-  },
-  messageStyle: "none",
-  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
-});
-</script>
-<script type="text/javascript"
-src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
-
   </body>
 </html>

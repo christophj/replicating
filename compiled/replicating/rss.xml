@@ -3,7 +3,7 @@
   <channel>
     <title>Replicating</title>
     <link>http://sample.com</link>
-    <pubDate>2013-02-10 16:06:19 +0100</pubDate>
+    <pubDate>2013-02-23 20:43:05 +0100</pubDate>
     <item>
       <title>How to set up a new blog with ruhoh on github</title>
       <link>http://sample.com/replicating/tutorial/how-to-set-up-a-new-blog-with-ruhoh-on-github</link>
@@ -57,12 +57,17 @@ $ git push -u origin master
 
 &lt;p&gt;Obviously, you have to replace USER with your github username and REPO with the repository that you have created before on the github.com website. If you do this, you should see all the files pushed to github.com and it should look similar to my &lt;a href="https://github.com/christophj"&gt;repository&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2 id="toc_3"&gt;Next steps&lt;/h2&gt;
+&lt;h2 id="toc_3"&gt;Google analytics&lt;/h2&gt;
+
+&lt;p&gt;Setting up Google Analytics is straightforward. Just set up Analytics on Google&amp;#39;s &lt;a href="google.com/analytics"&gt;webpage&lt;/a&gt;. You should then get a tracking number that you have to enter into the &lt;em&gt;config.yml&lt;/em&gt; file in the &lt;strong&gt;widget&lt;/strong&gt; folder of your blog. &lt;/p&gt;
+
+&lt;p&gt;Now it is important to push those updated to &lt;code&gt;github&lt;/code&gt; again and wait. It took a day or so for me until Google started tracking my blog.&lt;/p&gt;
+
+&lt;h2 id="toc_4"&gt;Next steps&lt;/h2&gt;
 
 &lt;p&gt;The next steps I&amp;#39;m playing are the following:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Get Google analytics to run.&lt;/li&gt;
 &lt;li&gt;Change the look of the code snippets. I don&amp;#39;t really like the gray, it looks too pale.&lt;/li&gt;
 &lt;/ul&gt;
 
