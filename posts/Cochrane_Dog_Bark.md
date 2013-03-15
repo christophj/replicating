@@ -8,12 +8,12 @@ tags: [R, replicating, finance, return predictability]
 
 
 
-In this post, I want to replicate some results of Cochrane (2008), The Dog That Did Not Bark: A Defense of Return Predictability, Review of Financial Studies, 21 (4). You can find that paper on John Cochrane's [webpage](http://faculty.chicagobooth.edu/john.cochrane/research/papers/cochrane%20dog%20that%20did%20not%20bark.pdf). I wrote some thoughts about return predictability already on my Goyal/Welch replication post, so please check this one out for some more background. Or just read the papers, they explain it better than I could anyway.
+In this post, I want to replicate some results of Cochrane (2008), The Dog That Did Not Bark: A Defense of Return Predictability, Review of Financial Studies, 21 (4). You can find that paper on John Cochrane's [webpage](http://faculty.chicagobooth.edu/john.cochrane/research/papers/cochrane%20dog%20that%20did%20not%20bark.pdf). I wrote some thoughts about return predictability already on my Goyal/Welch replication post, so please check this one out for some more background (TODO: link). Or just read the papers, they explain it better than I could anyway.
 
 Replication of the forecasting regressions in Cochrane's Table 1
 -------------------------
 
-Let's first repeat the forecasting regressions Cochrane runs in Table 1 of his paper. He uses data in real terms, i.e. deflated by the CPI, and on an annual basis ranging from 1926 to 2004. I do not have access to CRSP, but fortunately, we find similar data on Robert Shiller's [webpage](http://www.econ.yale.edu/~shiller/data.htm). His data is saved in an Excel-file and is formatted in such a way that you cannot just read it into R. So you manually have to delete unnessary rows and save the sheet *Data* as a .CSV file. Also, here is the naming convention I apply for the relevant columns:
+Let's first repeat the forecasting regressions Cochrane runs in Table 1 of his paper. He uses data in real terms, i.e. deflated by the CPI, and on an annual basis ranging from 1926 to 2004. I do not have access to CRSP, but fortunately, we find similar data on Robert Shiller's [web site](http://www.econ.yale.edu/~shiller/data.htm). His data is saved in an Excel-file and is formatted in such a way that you cannot just read it into R. So you manually have to delete unnessary rows and save the sheet *Data* as a .CSV file. Also, here is the naming convention I apply for the relevant columns:
 
 * **RealR**: Real One_Year Interest Rate (column H as of february 2013). Note that Cochrane uses real return on 3-month Treasury-Bills, but I'm to lazy to find that somewhere else and match it. 
 * **RealP**: RealP Stock Price (column P as of february 2013).
@@ -25,13 +25,13 @@ Let's first repeat the forecasting regressions Cochrane runs in Table 1 of his p
 ```r
 library(data.table)
 #CHANGE TO THE DIRECTORY IN WHICH YOU SAVED THE FILE
-strPath <- "/home/christoph/Dropbox/R_Package_Development/vignettes_REM/Data/Robert_Shiller_Data_Formatted.csv"
+strPath <- "/home/christophj/Dropbox/R_Package_Development/vignettes_REM/Data/Robert_Shiller_Data_Formatted.csv"
 #strPath <- "C:/Dropbox/R_Package_Development/vignettes_REM/Data/Robert_Shiller_Data_Formatted.csv"
 shiller_data <- as.data.table(read.csv(strPath))
 strStart <- 1924; strEnd <- 2005
 #GET RELEVANT DATA
 shiller_data <- shiller_data[, Dgrowth := c(NA, exp(diff(log(RealD))))]
-shiller_data <- shiller_data[, DP := RealD/RealP][, Ret_SP := Ret_SP + 1]
+shiller_data <- shiller_data[, DP := RealD/RealP]
 vec_Ret_SP <- c(NA, shiller_data[2:nrow(shiller_data), RealP + RealD]/shiller_data[1:(nrow(shiller_data)-1), RealP ])
 shiller_data <- shiller_data[, Ret_SP := vec_Ret_SP]
 shiller_data <- shiller_data[, Ex_Ret_SP := Ret_SP - RealR]
@@ -59,7 +59,7 @@ summary(shiller_data)
 
 With the summary statistics, you can check if you get the same results as I do. Now we have all the ingredients to run the regressions. 
 
-Since we have to lag the independent variable by one year, I use the R package **dyn**, which makes lagging easier. However, we have to convert our **data.table** to a time-series object first with the *ts* function.
+Since we have to lag the independent variable by one year, I use the R package `dyn`, which makes lagging easier. However, we have to convert our `data.table` to a time-series object first with the `ts` function.
 
 
 
@@ -75,7 +75,7 @@ list_reg <- list(reg_R_DP = dyn$lm(Ret_SP ~ lag(DP, -1), data=ts_data),
                  reg_dp_next_dp = dyn$lm(log(DP) ~ log(lag(DP, -1)), data=ts_data))
 tab <- t(as.data.frame(lapply(list_reg[1:5], FUN = function(reg) {
       c(b  = summary(reg)$coef[2,1], 
-        t  = summary(reg)$coef[2,2],
+        t  = summary(reg)$coef[2,3],
         R2 = summary(reg)$adj.r.sq * 100,
         sd = sd(reg$fitted) * 100)
       })))
@@ -85,8 +85,8 @@ tab <- t(as.data.frame(lapply(list_reg[1:5], FUN = function(reg) {
 print(xtable(tab), type="HTML")
 ```
 
-<!-- html table generated in R 2.15.1 by xtable 1.7-0 package -->
-<!-- Sat Feb  9 12:11:22 2013 -->
+<!-- html table generated in R 2.15.1 by xtable 1.7-1 package -->
+<!-- Thu Mar 14 19:14:33 2013 -->
 <TABLE border=1>
 <TR> <TH>  </TH> <TH> b </TH> <TH> t </TH> <TH> R2 </TH> <TH> sd </TH>  </TR>
   <TR> <TD align="right"> reg_R_DP </TD> <TD align="right"> 3.19 </TD> <TD align="right"> 2.23 </TD> <TD align="right"> 4.73 </TD> <TD align="right"> 4.76 </TD> </TR>
@@ -98,9 +98,9 @@ print(xtable(tab), type="HTML")
 
 
 
-Technically, it is a nice trick to save objects like the regression results in lists. (Note that if I would have had more regressions to run here, I would have written a small customed function in which the dependent and independent variables can be passed dynamically. However, for five regressions this isn't really necessary). Now you can loop through every object of the list with *lapply* and apply a function on that object. In the above example, I just return the four elements I'm interested in: regression coefficient, t-value, adjusted $R^2$, and standard deviation of the fitted values of the regression.
+Technically, it is a nice trick to save objects like the regression results in lists. (Note that if I would have had more regressions to run here, I would have written a small customed function in which the dependent and independent variables can be passed dynamically. However, for five regressions this isn't really necessary). Now you can loop through every object of the list with `lapply` and apply a function on that object. In the above example, I just return the four elements I'm interested in: regression coefficient, t-value, adjusted $R^2$, and standard deviation of the fitted values of the regression.
 
-As you can see, the regressions work by and large. Both returns and expected returns have a positive and significant regression coefficient, although mine is slightly lower than Cochrane's. This also leads to lower t-values. Also, I get a positive regression coefficient for the dividend growth regression and although it isn't signficant, it is still far higher than in Cochrane (2008), where it is virtually 0. 
+As you can see, the regressions work by and large. Both returns and expected returns have a positive and significant regression coefficient, although mine is slightly lower than Cochrane's. This also leads to lower t-values. Also, I get a positive regression coefficient for the dividend growth regression that is close to one. As a side note: This data set probably assumes that dividends are reinvested in the stock market. For instance, [Koijen/van Nieuwerburgh (2011)](http://papers.ssrn.com/sol3/papers.cfm?abstract_id=1723463) argue that it is better to reinvest dividends at the risk-free rate. Otherwise, what you actually measure are the properties of the stock market, i.e. realized returns, not realized dividends. Since you want to distinguish between the two, you should be careful here. They show results that actually give evidence for dividend growth predictability in the correct direction, i.e. high dividend-price ratios predict low future dividend growth.
 
 To the interpretation: Slope coefficients around 3 in the top two row mean that when "dividend yields rise one percentage point, prices rise another two percentage points on average, rather than declining one percentage point to offset the extra dividends and render returns unpredictable" (Cochrane, 2008, p. 1533).
 
@@ -170,9 +170,6 @@ $$ \begin{bmatrix} d_{t+1} - p_{t+1} \\ \Delta d_{t+1} \\ r_{t+1} \end{bmatrix} 
 The remaining steps according to Cochrane (2008, p. 1542): "I use the sample estimate of the covariance matrix of $\epsilon^{dp}$ and $\epsilon^d$. I simulate 50,000 artificial data sets from each null. For $\phi < 1$, I draw the first observation $d_0 - p_0$ from the unconditional density $d_0 - p_0 \sim N[0, \sigma^2(\epsilon^{dp})/(1-\phi^2)]$. For $\phi \geq 1$, I start at $d_0 - p_0 = 0$. I then draw $\epsilon_t^d$ and $\epsilon_t^{dp}$ as random normals and simulate the sytem forward."
 
 </div>
-   
-   
-So let's write  the function to simulate data:   
 
 
 ```r
@@ -222,8 +219,10 @@ run_MCS <- function(nrMCS = 50000, ...) {
                      dyn$lm(dp ~ lag(dp, -1), data=ts_data))
     
     #3. Get regression coefficients and t-values
-    reg_coef[i, 1:3] <- unlist(lapply(list_reg, FUN = function(reg) summary(reg)$coef[2,1]))
-    reg_coef[i, 4:6] <- unlist(lapply(list_reg, FUN = function(reg) summary(reg)$coef[2,3]))
+    reg_coef[i, 1:3] <- unlist(lapply(list_reg, 
+                                      FUN = function(reg) summary(reg)$coef[2,1]))
+    reg_coef[i, 4:6] <- unlist(lapply(list_reg, 
+                                      FUN = function(reg) summary(reg)$coef[2,3]))
     
   }
   
@@ -236,7 +235,7 @@ run_MCS <- function(nrMCS = 50000, ...) {
 ```
 
 
-Now we have all the ingredients to replicate Table 3 and Figure 1 in Cochrane (2008). Note that he is silent on how long one run actually is, i.e. what *nrT* should be in *simulate_data*. However, since he calibrates the regressions with 77 years of data, I'm gonna assume that this is the time period he is simulating per run. 
+Now we have all the ingredients to replicate Table 3 and Figure 1 in Cochrane (2008). Note that he is silent on how long one run actually is, i.e. what *nrT* should be in `simulate_data`. However, since he calibrates the regressions with 77 years of data, I'm gonna assume that this is the time period he is simulating per run. 
 
 
 
@@ -254,7 +253,7 @@ sum(reg_coef$Coef_ret > 0.097)/nrMCS*100
 ```
 
 ```
-## [1] 26.47
+## [1] 26.51
 ```
 
 ```r
@@ -262,7 +261,7 @@ sum(reg_coef$tValue_ret > 1.92)/nrMCS*100
 ```
 
 ```
-## [1] 9.422
+## [1] 9.318
 ```
 
 ```r
@@ -270,7 +269,7 @@ sum(reg_coef$Coef_div_growth > 0.008)/nrMCS*100
 ```
 
 ```
-## [1] 2.828
+## [1] 2.662
 ```
 
 ```r
@@ -278,7 +277,7 @@ sum(reg_coef$Coef_div_growth > 0.18)/nrMCS*100
 ```
 
 ```
-## [1] 0.004
+## [1] 0.006
 ```
 
 
@@ -320,7 +319,7 @@ But Cochrane argues that you shouldn't just look at the regression coefficient o
 
 <div>
 
-Also, we can reproduce the distribution of the long-run regression coefficients $b_r^{lr} = b_r/(1-\rho \hat{\phi})$. It is important that $b_r^{lr}$ is not estimated with a long-run regression, but computed with this formula. Also, you have to use the empirical autocorrelation coefficient of the dividend yield, i.e. $\hat{\phi}$, not the theoretical one, i.e. the one you pass to the function run_MCS. Shocks to realized returns and dividend yields are highly negatively correlated, which means that the empirical $\phi$ is smaller in cases in which $b_r$ is high.
+Also, we can reproduce the distribution of the long-run regression coefficients $b_r^{lr} = b_r/(1-\rho \hat{\phi})$. It is important that $b_r^{lr}$ is not estimated with a long-run regression, but computed with this formula. Also, you have to use the empirical autocorrelation coefficient of the dividend yield, i.e. $\hat{\phi}$, not the theoretical one, i.e. the one you pass to the function `run_MCS`. Shocks to realized returns and dividend yields are highly negatively correlated, which means that the empirical $\phi$ is smaller in cases in which $b_r$ is high.
 
 Note that in a few cases, you get very extreme negative estimates for $b_r^{lr}$. This is the case when $\rho \hat{\phi}$ is close to, but smaller than, 1. 
 
@@ -342,7 +341,7 @@ min(reg_coef$LRC_ret)
 ```
 
 ```
-## [1] -45.88
+## [1] -49.15
 ```
 
 
@@ -394,17 +393,17 @@ for (p in vec_phi) {
 print(xtable(df), type="HTML")
 ```
 
-<!-- html table generated in R 2.15.1 by xtable 1.7-0 package -->
-<!-- Sat Feb  9 11:37:20 2013 -->
+<!-- html table generated in R 2.15.1 by xtable 1.7-1 package -->
+<!-- Thu Mar 14 20:21:16 2013 -->
 <TABLE border=1>
 <TR> <TH>  </TH> <TH> Phi </TH> <TH> br </TH> <TH> bd </TH>  </TR>
-  <TR> <TD align="right"> 1 </TD> <TD align="right"> 0.90 </TD> <TD align="right"> 27.26 </TD> <TD align="right"> 1.18 </TD> </TR>
-  <TR> <TD align="right"> 2 </TD> <TD align="right"> 0.94 </TD> <TD align="right"> 26.70 </TD> <TD align="right"> 2.44 </TD> </TR>
-  <TR> <TD align="right"> 3 </TD> <TD align="right"> 0.96 </TD> <TD align="right"> 26.78 </TD> <TD align="right"> 4.36 </TD> </TR>
-  <TR> <TD align="right"> 4 </TD> <TD align="right"> 0.98 </TD> <TD align="right"> 25.30 </TD> <TD align="right"> 6.76 </TD> </TR>
-  <TR> <TD align="right"> 5 </TD> <TD align="right"> 0.99 </TD> <TD align="right"> 24.76 </TD> <TD align="right"> 8.12 </TD> </TR>
-  <TR> <TD align="right"> 6 </TD> <TD align="right"> 1.00 </TD> <TD align="right"> 24.72 </TD> <TD align="right"> 9.86 </TD> </TR>
-  <TR> <TD align="right"> 7 </TD> <TD align="right"> 1.01 </TD> <TD align="right"> 20.28 </TD> <TD align="right"> 12.70 </TD> </TR>
+  <TR> <TD align="right"> 1 </TD> <TD align="right"> 0.90 </TD> <TD align="right"> 27.18 </TD> <TD align="right"> 1.00 </TD> </TR>
+  <TR> <TD align="right"> 2 </TD> <TD align="right"> 0.94 </TD> <TD align="right"> 26.66 </TD> <TD align="right"> 2.82 </TD> </TR>
+  <TR> <TD align="right"> 3 </TD> <TD align="right"> 0.96 </TD> <TD align="right"> 26.04 </TD> <TD align="right"> 3.92 </TD> </TR>
+  <TR> <TD align="right"> 4 </TD> <TD align="right"> 0.98 </TD> <TD align="right"> 25.46 </TD> <TD align="right"> 6.58 </TD> </TR>
+  <TR> <TD align="right"> 5 </TD> <TD align="right"> 0.99 </TD> <TD align="right"> 24.30 </TD> <TD align="right"> 8.66 </TD> </TR>
+  <TR> <TD align="right"> 6 </TD> <TD align="right"> 1.00 </TD> <TD align="right"> 25.84 </TD> <TD align="right"> 11.44 </TD> </TR>
+  <TR> <TD align="right"> 7 </TD> <TD align="right"> 1.01 </TD> <TD align="right"> 22.14 </TD> <TD align="right"> 13.28 </TD> </TR>
    </TABLE>
 
 
@@ -421,6 +420,6 @@ colMeans(reg_coef)[1:3]
 
 ```
 ##        Coef_ret Coef_div_growth         Coef_dp 
-##         0.05725        -0.09330         0.88135
+##         0.05708        -0.09323         0.88160
 ```
 

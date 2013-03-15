@@ -12,12 +12,12 @@
     <![endif]-->
 
     <!-- Le styles -->
-    <link href="/replicating/assets/twitter/stylesheets/bootstrap.min.css?0.26274866381316775" type="text/css" rel="stylesheet" media="all">
-<link href="/replicating/assets/twitter/stylesheets/style.css?0.27566932330668203" type="text/css" rel="stylesheet" media="all">
-<link href="/replicating/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css?0.3584017299776152" type="text/css" rel="stylesheet" media="all">
+    <link href="/replicating/assets/twitter/stylesheets/bootstrap.min.css?0.5022611992834367" type="text/css" rel="stylesheet" media="all">
+<link href="/replicating/assets/twitter/stylesheets/style.css?0.15206951070585073" type="text/css" rel="stylesheet" media="all">
+<link href="/replicating/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css?0.7721583472554033" type="text/css" rel="stylesheet" media="all">
 
     
-    
+
 
     <!-- Le fav and touch icons -->
   <!-- Update these with your own images
@@ -65,6 +65,50 @@
 <div class="row-fluid">
   <div class="span12">
     <div class="post">
+  <h3 class="title"><a href="/replicating/r/vector-autoregression-var-in-r">Vector autoregression (VAR) in R</a> <span class="date">2013-03-12</span></h3>
+
+  <p>In this post, I want to show how to run a vector autoregression (VAR) in <code>R</code>. First, I&#39;m gonna explain with the help of a finance example when this method comes in handy and then I&#39;m gonna run one with the help of the <code>vars</code> package.</p>
+
+<h1 id="toc_0">Some theory</h1>
+
+<p>So what exactly is a VAR? Without going into too much detail here, it&#39;s basically just a generalization of a univariate autoregression (AR) model. An AR model explains <em>one</em> variable linearly with its own previous values, while a VAR explains a <em>vector</em> of variables with the vector&#39;s previous values. The VAR model is a statistical tool in the sense that it just fits the coefficients that best describe the data at hand. You still should have some economic intuition on why you put the variables in your vector. For instance, you could easily estimate a VAR with a time-series of the number of car sales in Germany and the temperature in Australia. However, it&#39;s hard to sell to someone <em>why</em> you are doing this, even if you would find that one variable helps explaining the other...</p>
+
+<p>Let&#39;s make an example of a VAR often applied in finance (starting with <a href="http://schwert.ssb.rochester.edu/f532/jf93_ca.pdf">Campbell/Ammer, 1993</a>). Concretely, I implement an approach to decompose unexpected returns into two parts: cash flow (CF) news and discount rate (DR) news. This is an important issue, as pointed out for instance by <a href="http://www.kent.edu/business/about/upload/ChenZhao_RFS2009.pdf">Chen/Zhao (2009): Return decomposition</a>, which notation I&#39;m going to use here as well:</p>
+
+<blockquote>
+<p>Naturally, ﬁnancial economists place keen interest in the relative importance of CF news and DR news—the
+two fundamental components of asset valuation—in determining the time-series and cross-sectional variations of stock returns. Relatively speaking, CF news is more related to ﬁrm fundamentals because of its link to production; DR
+news can reﬂect time-varying risk aversion or investor sentiment. Their relative importance thus helps greatly to understand how the ﬁnancial market works, and provides the empirical basis for theoretical modeling.</p>
+</blockquote>
+
+<div>
+
+We start with the following decomposition of unexpected equity return $e_{t+1}$, based on the seminal work by Campbell/Shiller (1988):
+
+$$ e_{t+1} = r_{t+1} - E_t r_{t+1} $$
+$$ = (E_{t+1} - E_t) \sum_{j=0}^{\infty} \rho^j \Delta d_{t+1+j} - (E_{t+1} - E_t) \sum_{j=1}^{\infty} \rho^j r_{t+1+j} $$
+$$ = e_{CF,t+1} - e_{DR, t+1} $$
+
+I'm not going into details here about the notation because this is explained for instance in Chen/Zhao (2009) and tons of other papers. However, just a short motivation on what is done here. Basically, investors expect a return for the next period ($E_t r_{t+1}$). However, there is uncertainty in this world and hence, you normally don't get what you expect, but what actually happens, i.e. $r_{t+1}$. For example, investor at the beginning of 2008 most definitely expected a positive return on their stocks, otherwise they wouldn't have had invested in them. But in the end, they ended up with a high negative return because negative news came in. So the unexpected return $e_{t+1}$ is just the difference between the actual realization $r_{t+1}$ and the expected return $E_t r_{t+1}$.
+
+</div>
+
+<p>However, financial economists are also interested on <em>why</em> returns didn&#39;t turn out to be the same as expected. Well obviously, some news must have arrived in period $t+1$ which led to a revisal and adjustment of the stock price, which in turn leads to a different return. The Campbell/Shiller decomposition shows that there are only two relevant parameters: news about future expected cash flows and news about future expected returns. As the above quote already shows, separating between these two is an important issue in financial research.</p>
+
+<p><div></p>
+
+<p>Now, let&#39;s introduce a VAR process. Concretely, we will assume that there is a vector of state variables $z_t$ that follows a first-order VAR. This means that every state variable in period $t+1$ can be explained by a linear combination of the state variables in $t$ and a constant. Surpressing the constant, we can write</p>
+
+<p>$$ z<em>{t+1} = \Gamma z</em>t + u_{t+1} $$</p>
+
+<p>We further assume that the first element of the state variable vector $z<em>{t+1}$ is the equity return $r</em>{t+1}$. We can then write the discount rate news as follows:</p>
+
+
+  <div class="more">
+    <a href="/replicating/r/vector-autoregression-var-in-r" class="btn btn-small">read more..</a>
+  </div>
+</div>
+<div class="post">
   <h3 class="title"><a href="/replicating/tutorial/how-to-set-up-a-new-blog-with-ruhoh-on-github">How to set up a new blog with ruhoh on github</a> <span class="date">2013-02-10</span></h3>
 
   <p>Since it took me quite some effort to get this blog running, I give a short summary of the steps I went through. Note, however, that I am really a beginner at this, so I only point you to those links that helped me. Don&#39;t even bother to ask me when something doesn&#39;t work. Not that I wouldn&#39;t want to help...I just couldn&#39;t. Oh, and just to be clear: this guide assumes that you are using Linux.</p>
@@ -95,9 +139,9 @@
 
 <p>You have to install a <code>mathjax</code> widget, which sounds more complicated than it is. Your folder structure should have one folder named <em>widgets</em>. In this folder, add another folder named <em>mathjax</em>, and a subfolder named <em>layouts</em> and copy <a href="https://github.com/ramnathv/ramnathv.ruhoh.com/blob/master/widgets/mathjax/layouts/mathjax.html">this file</a> into the <em>layouts</em> folder. Actually, if you check out that file online, you also see the folder structure it has to be into.</p>
 
-<p>Now you should be able to write equations in LaTex. In-text math should be surrounded with $ signs, equations in a separate line with double dollar signs. To check if it worked, copy this <a href="https://gist.github.com/plusjade/2699636">sample file</a> into your pages folder and check it out in your localhost session. </p>
+<p>Finally, you have to put {{{ mathjax }}} in your <em>default.html</em> file in the <code>/themes/.../layouts</code> subfolder. </p>
 
-<p>The only issue I had was that I couldn&#39;t use underscores, which are quite important in LaTex. However, this <a href="http://stackoverflow.com/questions/10438937/is-there-a-markdown-parser-supported-on-jekyll-that-plays-nicely-with-mathjax">SO post</a> solved this problem.</p>
+<p>Now you should be able to write equations in LaTex. In-text math should be surrounded with $ signs, equations in a separate line with double dollar signs. To check if it worked, copy this <a href="https://gist.github.com/plusjade/2699636">sample file</a> into your pages folder and check it out in your localhost session. </p>
 
 
   <div class="more">
@@ -107,11 +151,11 @@
 <div class="post">
   <h3 class="title"><a href="/replicating/r/replicating-cochrane-2008">Replicating Cochrane (2008)</a> <span class="date">2013-02-09</span></h3>
 
-  <p>In this post, I want to replicate some results of Cochrane (2008), The Dog That Did Not Bark: A Defense of Return Predictability, Review of Financial Studies, 21 (4). You can find that paper on John Cochrane&#39;s <a href="http://faculty.chicagobooth.edu/john.cochrane/research/papers/cochrane%20dog%20that%20did%20not%20bark.pdf">webpage</a>. I wrote some thoughts about return predictability already on my Goyal/Welch replication post, so please check this one out for some more background. Or just read the papers, they explain it better than I could anyway.</p>
+  <p>In this post, I want to replicate some results of Cochrane (2008), The Dog That Did Not Bark: A Defense of Return Predictability, Review of Financial Studies, 21 (4). You can find that paper on John Cochrane&#39;s <a href="http://faculty.chicagobooth.edu/john.cochrane/research/papers/cochrane%20dog%20that%20did%20not%20bark.pdf">webpage</a>. I wrote some thoughts about return predictability already on my Goyal/Welch replication post, so please check this one out for some more background (TODO: link). Or just read the papers, they explain it better than I could anyway.</p>
 
 <h2 id="toc_0">Replication of the forecasting regressions in Cochrane&#39;s Table 1</h2>
 
-<p>Let&#39;s first repeat the forecasting regressions Cochrane runs in Table 1 of his paper. He uses data in real terms, i.e. deflated by the CPI, and on an annual basis ranging from 1926 to 2004. I do not have access to CRSP, but fortunately, we find similar data on Robert Shiller&#39;s <a href="http://www.econ.yale.edu/%7Eshiller/data.htm">webpage</a>. His data is saved in an Excel-file and is formatted in such a way that you cannot just read it into R. So you manually have to delete unnessary rows and save the sheet <em>Data</em> as a .CSV file. Also, here is the naming convention I apply for the relevant columns:</p>
+<p>Let&#39;s first repeat the forecasting regressions Cochrane runs in Table 1 of his paper. He uses data in real terms, i.e. deflated by the CPI, and on an annual basis ranging from 1926 to 2004. I do not have access to CRSP, but fortunately, we find similar data on Robert Shiller&#39;s <a href="http://www.econ.yale.edu/%7Eshiller/data.htm">web site</a>. His data is saved in an Excel-file and is formatted in such a way that you cannot just read it into R. So you manually have to delete unnessary rows and save the sheet <em>Data</em> as a .CSV file. Also, here is the naming convention I apply for the relevant columns:</p>
 
 <ul>
 <li><strong>RealR</strong>: Real One_Year Interest Rate (column H as of february 2013). Note that Cochrane uses real return on 3-month Treasury-Bills, but I&#39;m to lazy to find that somewhere else and match it. </li>
@@ -123,13 +167,13 @@
 
 <pre><code class="r">library(data.table)
 #CHANGE TO THE DIRECTORY IN WHICH YOU SAVED THE FILE
-strPath &lt;- &quot;/home/christoph/Dropbox/R_Package_Development/vignettes_REM/Data/Robert_Shiller_Data_Formatted.csv&quot;
+strPath &lt;- &quot;/home/christophj/Dropbox/R_Package_Development/vignettes_REM/Data/Robert_Shiller_Data_Formatted.csv&quot;
 #strPath &lt;- &quot;C:/Dropbox/R_Package_Development/vignettes_REM/Data/Robert_Shiller_Data_Formatted.csv&quot;
 shiller_data &lt;- as.data.table(read.csv(strPath))
 strStart &lt;- 1924; strEnd &lt;- 2005
 #GET RELEVANT DATA
 shiller_data &lt;- shiller_data[, Dgrowth := c(NA, exp(diff(log(RealD))))]
-shiller_data &lt;- shiller_data[, DP := RealD/RealP][, Ret_SP := Ret_SP + 1]
+shiller_data &lt;- shiller_data[, DP := RealD/RealP]
 vec_Ret_SP &lt;- c(NA, shiller_data[2:nrow(shiller_data), RealP + RealD]/shiller_data[1:(nrow(shiller_data)-1), RealP ])
 shiller_data &lt;- shiller_data[, Ret_SP := vec_Ret_SP]
 shiller_data &lt;- shiller_data[, Ex_Ret_SP := Ret_SP - RealR]
@@ -233,7 +277,7 @@ print(xtable(df, digits=2, caption=strCaption, label=&quot;Test_table&quot;),
 <p>$$
 \begin{aligned}
 R^2   &amp;= 1 - \frac{MSE<em>A}{MSE</em>N} \
-\Delta RMSE &amp;= \sqrt{MSE<em>N} - \sqrt{MSE</em>A}\
+\Delta  RMSE &amp;= \sqrt{MSE<em>N} - \sqrt{MSE</em>A}\
 \end{aligned}
 $$</p>
 
@@ -284,5 +328,24 @@ $$</p>
   g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
   s.parentNode.insertBefore(g,s)}(document,'script'));
 </script>
+    <!-- INSERT MATHJAX CONFIGURATION FROM MATH.STACKEXCHANGE -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+<script type="text/javascript"
+src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+    
   </body>
 </html>

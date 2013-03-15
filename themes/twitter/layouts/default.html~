@@ -17,7 +17,7 @@
     <!-- Le styles -->
     {{{ stylesheets.all }}}
     {{{ javascripts.all }}}
-    {{{ mathjax }}}
+
 
     <!-- Le fav and touch icons -->
   <!-- Update these with your own images
@@ -61,5 +61,7 @@
 
     {{{ widgets.google_prettify }}}
     {{{ widgets.analytics }}}
+    {{{ widgets.mathjax }}}
+    {{{ mathjax }}}
   </body>
 </html>

@@ -12,12 +12,12 @@
     <![endif]-->
 
     <!-- Le styles -->
-    <link href="/replicating/assets/twitter/stylesheets/bootstrap.min.css?0.49510295166002594" type="text/css" rel="stylesheet" media="all">
-<link href="/replicating/assets/twitter/stylesheets/style.css?0.8340977282844487" type="text/css" rel="stylesheet" media="all">
-<link href="/replicating/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css?0.9137305774370055" type="text/css" rel="stylesheet" media="all">
+    <link href="/replicating/assets/twitter/stylesheets/bootstrap.min.css?0.4336855533201286" type="text/css" rel="stylesheet" media="all">
+<link href="/replicating/assets/twitter/stylesheets/style.css?0.0504443872594188" type="text/css" rel="stylesheet" media="all">
+<link href="/replicating/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css?0.11418830385167966" type="text/css" rel="stylesheet" media="all">
 
     
-    
+
 
     <!-- Le fav and touch icons -->
   <!-- Update these with your own images
@@ -93,7 +93,7 @@
 $$
 \begin{aligned}
 R^2   &= 1 - \frac{MSE_A}{MSE_N} \\
-\Delta RMSE &= \sqrt{MSE_N} - \sqrt{MSE_A}\\
+\Delta  RMSE &= \sqrt{MSE_N} - \sqrt{MSE_A}\\
 \end{aligned}
 $$
 
@@ -117,16 +117,16 @@ Note, however, that these statistics only apply to the OOS tests. For the IS tes
 <li>Inﬂation (<strong>inﬂ</strong>): Inﬂation is the Consumer Price Index (All Urban Consumers) for the period 1919 to 2005 from the Bureau of Labor Statistics. Because inﬂation information is released only in the following month, in our monthly regressions, we inserted one month of waiting before use Inﬂation (inﬂ): Inﬂation is the Consumer Price Index (All Urban Consumers) for the period 1919 to 2005 from the Bureau of Labor Statistics. Because inﬂation information is released only in the following month, in our monthly regressions, we inserted one month of waiting before use.</li>
 </ul>
 
-<p>The monthly, quarterly, and annual data is saved in one Excel file. To read that into R, I have split this excel file into three CSV-files. Now it&#39;s easy to read them in. Also, I convert them into <strong>data.tables</strong> because I prefer to work with them instead of <strong>data.frames</strong>. Finally, I use the package <strong>lubridate</strong> to convert the column <em>Datum</em> into a date. You have to name this column yourself in the CSV-file!</p>
+<p>The monthly, quarterly, and annual data is saved in one Excel file. To read that into R, I have split this excel file into three CSV-files. Now it&#39;s easy to read them in. Also, I convert them into <code>data.tables</code> because I prefer to work with them instead of <code>data.frames</code>. Finally, I use the package <code>lubridate</code> to convert the column <code>Datum</code> into a date. You have to name this column yourself in the CSV-file!</p>
 
 <pre><code class="r">library(data.table)
 library(ggplot2)
 library(lubridate)
 library(dyn)
 library(reshape2)
-monthly &lt;- read.csv2(&quot;/home/christoph/Dropbox/FinanceIssues/ReturnPredictability/Data/monthly_2005.csv&quot;, 
+monthly &lt;- read.csv2(&quot;/home/christophj/Dropbox/FinanceIssues/ReturnPredictability/Data/monthly_2005.csv&quot;, 
                      na.strings=&quot;NaN&quot;, stringsAsFactors=FALSE)
-annual  &lt;- read.csv2(&quot;/home/christoph/Dropbox/FinanceIssues/ReturnPredictability/Data/annual_2005.csv&quot;, 
+annual  &lt;- read.csv2(&quot;/home/christophj/Dropbox/FinanceIssues/ReturnPredictability/Data/annual_2005.csv&quot;, 
                      na.strings=&quot;NaN&quot;, stringsAsFactors=FALSE)
 monthly &lt;- as.data.table(monthly)
 annual  &lt;- as.data.table(annual)
@@ -169,14 +169,14 @@ plot(ts_annual[, c(&quot;rp_div&quot;, &quot;dp&quot;, &quot;dy&quot;)])
 
 <p>Next, we want to replicate the plots in Goyal/Welch (2008), i.e. we plot the cumulative squared predictions errors of the NULL (simple average mean) minus the cumulative squared prediction error of the ALTERNATIVE, where the ALTERNATIVE is a model that relies on a predictive variable to forecast the equity premium. We also give some summary statistics.</p>
 
-<p>This is all done in one function. This function takes a <strong>data.frame</strong> (note that a <strong>data.table</strong> is just a <strong>data.frame</strong>) (<em>ts_df</em>), the independent variable (<em>indep</em>), the dependent variable (<em>dep</em>), the degree of overlap (<em>h</em>), the start year (<em>start</em>) , the end year (<em>end</em>), and the initial periods to estimate the OOS statistics (<em>est_periods_OOS</em>). The base case here is 20 periods which means that we need 20 years initially to make our first prediction.</p>
+<p>This is all done in one function. This function takes a <code>data.frame</code> (note that a <code>data.table</code> is just a <code>data.frame</code>) (<em>ts_df</em>), the independent variable (<em>indep</em>), the dependent variable (<em>dep</em>), the degree of overlap (<em>h</em>), the start year (<em>start</em>) , the end year (<em>end</em>), and the OOS period (<em>OOS_period</em>), which basically decides how many periods are used to compute the out-of-sample statistics.</p>
 
 <p>A few comments on the function (I hope the rest is self-explanatory, otherwise leave a comment):</p>
 
 <ul>
-<li>The function <strong>window</strong> expects a time-series. This is why we called the function <strong>ts</strong> further above. The function <strong>window</strong> is quite convenient in subsetting a data set based on the date.</li>
-<li>The package <strong>dyn</strong> is used to easily run regressions with a lagged variable.</li>
-<li>In general, the lines in which I call functions like <strong>eval</strong>, <strong>parse</strong>, etc. might be quite confusing. This looks quite complicated, but allows me to select the variables in <em>ts_df</em> dynamically. I&#39;m confused about how this actually works myself, so for me it&#39;s mostly try and error. Hadley Wickham&#39;s <a href="https://github.com/hadley/devtools/wiki/Evaluation">webpage</a> is quite helpful though.</li>
+<li>The function <code>window</code> expects a time-series. This is why we called the function <code>ts</code> further above. The function <code>window</code> is quite convenient in subsetting a data set based on the date.</li>
+<li>The package <code>dyn</code> is used to easily run regressions with a lagged variable.</li>
+<li>In general, the lines in which I call functions like <code>eval</code>, <code>parse</code>, etc. might be quite confusing. This looks quite complicated, but allows me to select the variables in <em>ts_df</em> dynamically. I&#39;m confused about how this actually works myself, so for me it&#39;s mostly try and error. Hadley Wickham&#39;s <a href="https://github.com/hadley/devtools/wiki/Evaluation">webpage</a> is quite helpful though.</li>
 </ul>
 
 <pre><code class="r">get_statistics &lt;- function(ts_df, indep, dep, h=1, start=1872, end=2005, est_periods_OOS = 20) {
@@ -188,8 +188,7 @@ plot(ts_annual[, c(&quot;rp_div&quot;, &quot;dp&quot;, &quot;dy&quot;)])
   IS_error_N &lt;- (window(ts_df, start, end)[, dep] - avg)
 
   #2. OLS model
-  reg &lt;- dyn$lm(eval(parse(text=dep)) ~ lag(eval(parse(text=indep)), -1), 
-                data=window(ts_df, start, end))
+  reg &lt;- dyn$lm(eval(parse(text=dep)) ~ lag(eval(parse(text=indep)), -1), data=window(ts_df, start, end))
   IS_error_A &lt;- reg$residuals
   ### 
 
@@ -272,11 +271,9 @@ plot(ts_annual[, c(&quot;rp_div&quot;, &quot;dp&quot;, &quot;dy&quot;)])
 dp_stat$plotGG
 </code></pre>
 
-<p>Just a short explanation on that second line of code. My function does not only return a plot, but also additional statistics. You can see that in the function at the very end when a list is returned. One element of that list is called <em>plotGG</em> and this one stores the <strong>ggplot2</strong> plot. But you can also get other objects of the list. For instance, if you want to get IS $\overline{R}^2$, just type <em>dp_stat$IS_aR2</em> into your R console.</p>
-
 <p><img src="/replicating/assets/twitter/media/Goyal-Welch/IS_dp.png" alt="plot of chunk IS_dp"> </p>
 
-<p>This figure looks almost exactly like the chart in Figure 1 of Goyal/Welch (2008). The only difference I notice is that both of their IS and OOS prediction are a little higher than mine. Also, my $\overline{R}^2$ is 0.48% and they have 0.49%.</p>
+<p>This figure looks exactly like the chart in Figure 1 of Goyal/Welch (2008), but my statistics are very different. Particularly the $\overline{R}^2$, which is 0.48% and 0.49% for them.</p>
 
 <h3 id="toc_6">Dividend-yield</h3>
 
@@ -298,35 +295,39 @@ ep_stat$plotGG
 
 <p>Statistics: $\overline{R}^2$, which is 1.10% and 1.08% for them.</p>
 
-<div>
+<h2 id="toc_8">Out-of-sample analysis (OOS)</h2>
 
-So this post showed you how to reproduce the plots of Goyal/Welch (2008) with R. Note that this post is meant to show you how easily this can be done with R, not to replicate exactly the statistics in their paper. A few things are off (plots are not exactly identical, $\overline{R_{IS}}^2$ is not always correct, my $\overline{R_{OOS}}^2$ is wrong), but since I get basically the same results as they do, I don't have the motivation right now to figure out where the really small deviations are coming from. Feel free to tell me if you figure it out, though.
+<p>Goyal/Welch (2008) explore three time period specifications:</p>
 
-</div>
+<ol>
+<li>OOS forecasts begin 20 years after data are available</li>
+<li>In 1965 (or 20 years after data are available, whichever comes later)</li>
+<li>Ignores all data prior to 1927 even in the estimation</li>
+</ol>
 
     </div>
     <ul class="tag_box inline">
       <li><i class="icon-folder-open"></i></li>
       <li>
-        <a href="/replicating/categories#R-ref">R <span>3</span></a>
+        <a href="/replicating/categories#R-ref">R <span>4</span></a>
       </li>
       <li>
-        <a href="/replicating/categories#finance-ref">finance <span>2</span></a>
+        <a href="/replicating/categories#finance-ref">finance <span>3</span></a>
       </li>
     </ul>
     <ul class="tag_box inline">
       <li><i class="icon-tags"></i></li>
       <li>
-        <a href="/replicating/tags#R-ref">R <span>3</span></a>
+        <a href="/replicating/tags#R-ref">R <span>4</span></a>
       </li>
       <li>
-        <a href="/replicating/tags#replicating-ref">replicating <span>2</span></a>
+        <a href="/replicating/tags#replicating-ref">replicating <span>3</span></a>
       </li>
       <li>
-        <a href="/replicating/tags#finance-ref">finance <span>2</span></a>
+        <a href="/replicating/tags#finance-ref">finance <span>3</span></a>
       </li>
       <li>
-        <a href="/replicating/tags#return predictability-ref">return predictability <span>2</span></a>
+        <a href="/replicating/tags#return predictability-ref">return predictability <span>3</span></a>
       </li>
     </ul>
     <hr>
@@ -386,5 +387,24 @@ So this post showed you how to reproduce the plots of Goyal/Welch (2008) with R.
   g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
   s.parentNode.insertBefore(g,s)}(document,'script'));
 </script>
+    <!-- INSERT MATHJAX CONFIGURATION FROM MATH.STACKEXCHANGE -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+<script type="text/javascript"
+src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+    
   </body>
 </html>

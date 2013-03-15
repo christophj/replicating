@@ -9,6 +9,5 @@ layout : default
 <div class="row-fluid">
   <div class="span12">
     {{{ page.content }}}
-    {{{ mathjax }}}
   </div>
 </div>

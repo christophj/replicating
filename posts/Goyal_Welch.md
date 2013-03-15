@@ -33,7 +33,7 @@ In my opinion, the most interesting part about this paper is that they don't bot
 $$
 \begin{aligned}
 R^2   &= 1 - \frac{MSE_A}{MSE_N} \\
-\Delta RMSE &= \sqrt{MSE_N} - \sqrt{MSE_A}\\
+\Delta  RMSE &= \sqrt{MSE_N} - \sqrt{MSE_A}\\
 \end{aligned}
 $$
 
@@ -59,7 +59,7 @@ The data is taken from Amit Goyal's [webpage](http://www.hec.unil.ch/agoyal/). T
 * The Term Spread (**tms**) is the diﬀerence between the long term yield on government bonds and the T-bill
 * Inﬂation (**inﬂ**): Inﬂation is the Consumer Price Index (All Urban Consumers) for the period 1919 to 2005 from the Bureau of Labor Statistics. Because inﬂation information is released only in the following month, in our monthly regressions, we inserted one month of waiting before use Inﬂation (inﬂ): Inﬂation is the Consumer Price Index (All Urban Consumers) for the period 1919 to 2005 from the Bureau of Labor Statistics. Because inﬂation information is released only in the following month, in our monthly regressions, we inserted one month of waiting before use.
 
-The monthly, quarterly, and annual data is saved in one Excel file. To read that into R, I have split this excel file into three CSV-files. Now it's easy to read them in. Also, I convert them into **data.tables** because I prefer to work with them instead of **data.frames**. Finally, I use the package **lubridate** to convert the column *Datum* into a date. You have to name this column yourself in the CSV-file!
+The monthly, quarterly, and annual data is saved in one Excel file. To read that into R, I have split this excel file into three CSV-files. Now it's easy to read them in. Also, I convert them into `data.tables` because I prefer to work with them instead of `data.frames`. Finally, I use the package `lubridate` to convert the column `Datum` into a date. You have to name this column yourself in the CSV-file!
 
 
 ```r
@@ -68,9 +68,9 @@ library(ggplot2)
 library(lubridate)
 library(dyn)
 library(reshape2)
-monthly <- read.csv2("/home/christoph/Dropbox/FinanceIssues/ReturnPredictability/Data/monthly_2005.csv", 
+monthly <- read.csv2("/home/christophj/Dropbox/FinanceIssues/ReturnPredictability/Data/monthly_2005.csv", 
                      na.strings="NaN", stringsAsFactors=FALSE)
-annual  <- read.csv2("/home/christoph/Dropbox/FinanceIssues/ReturnPredictability/Data/annual_2005.csv", 
+annual  <- read.csv2("/home/christophj/Dropbox/FinanceIssues/ReturnPredictability/Data/annual_2005.csv", 
                      na.strings="NaN", stringsAsFactors=FALSE)
 monthly <- as.data.table(monthly)
 annual  <- as.data.table(annual)
@@ -107,7 +107,6 @@ plot(ts_annual[, c("rp_div", "dp", "dy")])
 ![plot of chunk Compute_DP_and_DY]({{urls.theme}}/media/Goyal-Welch/Compute_DP_and_DY.png) 
 
 
-
 This yields exactly the same equity premia as in Goyal/Welch (2008, p. 1457), more precisely a mean (standard deviation) of the log equity risk premium of 4.84% (17.79%) for the complete sample from 1872 to 2005; of 6.04% (19.17%) from 1927 to 2005; and of 6.04% (15.70%) from 1965 to 2005.
 
 Also, a look at the figure is interesting, which replicates figure 1 from Goyal/Welch (2003). They write "... that there is some nonstationarity in the dividend ratios. The dividend ratios are almost random walks, while the equity premia are almost i.i.d. Not surprisingly, the augmented Dickey and Fuller (1979) test indicates that over the entire sample period, we cannot reject that the dividend ratios contain a unit-root (see Stambaugh 1999 and Yan 1999)."
@@ -117,13 +116,13 @@ Define function
 
 Next, we want to replicate the plots in Goyal/Welch (2008), i.e. we plot the cumulative squared predictions errors of the NULL (simple average mean) minus the cumulative squared prediction error of the ALTERNATIVE, where the ALTERNATIVE is a model that relies on a predictive variable to forecast the equity premium. We also give some summary statistics.
 
-This is all done in one function. This function takes a **data.frame** (note that a **data.table** is just a **data.frame**) (*ts\_df*), the independent variable (*indep*), the dependent variable (*dep*), the degree of overlap (*h*), the start year (*start*) , the end year (*end*), and the initial periods to estimate the OOS statistics (*est\_periods\_OOS*). The base case here is 20 periods which means that we need 20 years initially to make our first prediction.
+This is all done in one function. This function takes a `data.frame` (note that a `data.table` is just a `data.frame`) (*ts\_df*), the independent variable (*indep*), the dependent variable (*dep*), the degree of overlap (*h*), the start year (*start*) , the end year (*end*), and the OOS period (*OOS\_period*), which basically decides how many periods are used to compute the out-of-sample statistics.
 
 A few comments on the function (I hope the rest is self-explanatory, otherwise leave a comment):
 
-* The function **window** expects a time-series. This is why we called the function **ts** further above. The function **window** is quite convenient in subsetting a data set based on the date.
-* The package **dyn** is used to easily run regressions with a lagged variable.
-* In general, the lines in which I call functions like **eval**, **parse**, etc. might be quite confusing. This looks quite complicated, but allows me to select the variables in *ts\_df* dynamically. I'm confused about how this actually works myself, so for me it's mostly try and error. Hadley Wickham's [webpage](https://github.com/hadley/devtools/wiki/Evaluation) is quite helpful though.
+* The function `window` expects a time-series. This is why we called the function `ts` further above. The function `window` is quite convenient in subsetting a data set based on the date.
+* The package `dyn` is used to easily run regressions with a lagged variable.
+* In general, the lines in which I call functions like `eval`, `parse`, etc. might be quite confusing. This looks quite complicated, but allows me to select the variables in *ts\_df* dynamically. I'm confused about how this actually works myself, so for me it's mostly try and error. Hadley Wickham's [webpage](https://github.com/hadley/devtools/wiki/Evaluation) is quite helpful though.
 
 
 
@@ -137,8 +136,7 @@ get_statistics <- function(ts_df, indep, dep, h=1, start=1872, end=2005, est_per
   IS_error_N <- (window(ts_df, start, end)[, dep] - avg)
   
   #2. OLS model
-  reg <- dyn$lm(eval(parse(text=dep)) ~ lag(eval(parse(text=indep)), -1), 
-                data=window(ts_df, start, end))
+  reg <- dyn$lm(eval(parse(text=dep)) ~ lag(eval(parse(text=indep)), -1), data=window(ts_df, start, end))
   IS_error_A <- reg$residuals
   ### 
   
@@ -224,14 +222,12 @@ In-sample analysis (IS)
 dp_stat <- get_statistics(ts_annual, "dp", "rp_div", start=1872)
 dp_stat$plotGG
 ```
-Just a short explanation on that second line of code. My function does not only return a plot, but also additional statistics. You can see that in the function at the very end when a list is returned. One element of that list is called *plotGG* and this one stores the **ggplot2** plot. But you can also get other objects of the list. For instance, if you want to get IS $\overline{R}^2$, just type *dp\_stat$IS\_aR2* into your R console.
-
 
 ![plot of chunk IS_dp]({{urls.theme}}/media/Goyal-Welch/IS_dp.png) 
 
 
 
-This figure looks almost exactly like the chart in Figure 1 of Goyal/Welch (2008). The only difference I notice is that both of their IS and OOS prediction are a little higher than mine. Also, my $\overline{R}^2$ is 0.48% and they have 0.49%.
+This figure looks exactly like the chart in Figure 1 of Goyal/Welch (2008), but my statistics are very different. Particularly the $\overline{R}^2$, which is 0.48% and 0.49% for them.
 
 ### Dividend-yield
 
@@ -259,9 +255,14 @@ ep_stat$plotGG
 
 Statistics: $\overline{R}^2$, which is 1.10% and 1.08% for them.
 
-<div>
 
-So this post showed you how to reproduce the plots of Goyal/Welch (2008) with R. Note that this post is meant to show you how easily this can be done with R, not to replicate exactly the statistics in their paper. A few things are off (plots are not exactly identical, $\overline{R_{IS}}^2$ is not always correct, my $\overline{R_{OOS}}^2$ is wrong), but since I get basically the same results as they do, I don't have the motivation right now to figure out where the really small deviations are coming from. Feel free to tell me if you figure it out, though.
+Out-of-sample analysis (OOS)
+-------------------------
 
-</div>
+Goyal/Welch (2008) explore three time period specifications:
+
+
+1. OOS forecasts begin 20 years after data are available
+2. In 1965 (or 20 years after data are available, whichever comes later)
+3. Ignores all data prior to 1927 even in the estimation
 

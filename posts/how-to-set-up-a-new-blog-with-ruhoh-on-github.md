@@ -35,6 +35,8 @@ Install mathjax
 
 You have to install a `mathjax` widget, which sounds more complicated than it is. Your folder structure should have one folder named *widgets*. In this folder, add another folder named *mathjax*, and a subfolder named *layouts* and copy [this file](https://github.com/ramnathv/ramnathv.ruhoh.com/blob/master/widgets/mathjax/layouts/mathjax.html) into the *layouts* folder. Actually, if you check out that file online, you also see the folder structure it has to be into.
 
+Finally, you have to put \{\{\{ mathjax \}\}\} in your *default.html* file in the `/themes/.../layouts` subfolder. 
+
 Now you should be able to write equations in LaTex. In-text math should be surrounded with $ signs, equations in a separate line with double dollar signs. To check if it worked, copy this [sample file](https://gist.github.com/plusjade/2699636) into your pages folder and check it out in your localhost session. 
 
 The only issue I had was that I couldn't use underscores, which are quite important in LaTex. However, this [SO post](http://stackoverflow.com/questions/10438937/is-there-a-markdown-parser-supported-on-jekyll-that-plays-nicely-with-mathjax) solved this problem.
