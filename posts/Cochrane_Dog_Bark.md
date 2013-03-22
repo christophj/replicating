@@ -8,12 +8,12 @@ tags: [R, replicating, finance, return predictability]
 
 
 
-In this post, I want to replicate some results of Cochrane (2008), The Dog That Did Not Bark: A Defense of Return Predictability, Review of Financial Studies, 21 (4). You can find that paper on John Cochrane's [webpage](http://faculty.chicagobooth.edu/john.cochrane/research/papers/cochrane%20dog%20that%20did%20not%20bark.pdf). I wrote some thoughts about return predictability already on my Goyal/Welch replication post, so please check this one out for some more background (TODO: link). Or just read the papers, they explain it better than I could anyway.
+In this post, I want to replicate some results of Cochrane (2008), The Dog That Did Not Bark: A Defense of Return Predictability, Review of Financial Studies, 21 (4). You can find that paper on John Cochrane's [website](http://faculty.chicagobooth.edu/john.cochrane/research/papers/cochrane%20dog%20that%20did%20not%20bark.pdf). I wrote some thoughts about return predictability already on my [Goyal/Welch replication post](http://christophj.github.com/replicating/r/replicating-goyal-welch-2008/), so please check this one out for some more background. Or just read the papers, they explain it better than I could anyway.
 
 Replication of the forecasting regressions in Cochrane's Table 1
 -------------------------
 
-Let's first repeat the forecasting regressions Cochrane runs in Table 1 of his paper. He uses data in real terms, i.e. deflated by the CPI, and on an annual basis ranging from 1926 to 2004. I do not have access to CRSP, but fortunately, we find similar data on Robert Shiller's [web site](http://www.econ.yale.edu/~shiller/data.htm). His data is saved in an Excel-file and is formatted in such a way that you cannot just read it into R. So you manually have to delete unnessary rows and save the sheet *Data* as a .CSV file. Also, here is the naming convention I apply for the relevant columns:
+Let's first repeat the forecasting regressions Cochrane runs in Table 1 of his paper. He uses data in real terms, i.e. deflated by the CPI, and on an annual basis ranging from 1926 to 2004. I do not have access to CRSP, but fortunately, we find similar data on Robert Shiller's [website](http://www.econ.yale.edu/~shiller/data.htm). His data is saved in an Excel-file and is formatted in such a way that you cannot just read it into R. So you manually have to delete unnecessary rows and save the sheet *Data* as a .CSV file. Also, here is the naming convention I apply for the relevant columns:
 
 * **RealR**: Real One_Year Interest Rate (column H as of february 2013). Note that Cochrane uses real return on 3-month Treasury-Bills, but I'm to lazy to find that somewhere else and match it. 
 * **RealP**: RealP Stock Price (column P as of february 2013).
@@ -117,7 +117,7 @@ $$ (d_{t+1} - p_{t+1}) = a_{dp} + \phi (d_t - p_t) + \epsilon^{dp}_{t+1} $$
 
 $b_r$ and $b_d$ are the regression coefficients we estimated before, $\phi$ is the dividend-yield autocorrelation.
 
-Also, the Cambpell-Shiller (1988) linearization gives us an approximate identity for log returns subject to dividend growth and price-dividend ratios:
+Also, the Campbell-Shiller (1988) linearization gives us an approximate identity for log returns subject to dividend growth and price-dividend ratios:
 
 $$ r_{t+1} \approx \rho (p_{t+1} - d_{t+1}) + \Delta d_{t+1} - (p_t - d_t) $$
 
@@ -131,7 +131,7 @@ Now, divide both sides of the equation by $d_t - p_t$ to get
 
 $$ 1 = \frac{r_{t+1}}{d_t - p_t} + \frac{\rho (d_{t+1} - p_{t+1})}{d_t - p_t} - \frac{\Delta d_{t+1}}{d_t - p_t} $$
 
-However, the fractions are just the projections of the current dividend yield on the log returns, the log dividend yields of next year, and log dividend growth, respectively. To see that, take the expectations on the first equation:
+However, the fractions are just the projections of the log returns, the log dividend yields of next year, and log dividend growth, respectively, on the current dividend yield. To see that, take the expectations on the first equation:
 
 $$ E_t[r_{t+1}] = E_t[a_r + b_r (d_t - p_t) + \epsilon^r_{t+1}] $$
 $$ E_t[r_{t+1}] = b_r (d_t - p_t)$$
@@ -151,12 +151,11 @@ We can again ignore the intercepts because we are dealing with demeaned variable
 
 $$ \epsilon^r_{t+1} =  \epsilon^d_{t+1} - \rho \epsilon^{dp}_{t+1} $$
 
+</div>
 
-Now, let's simulate the VAR and assume that returns are **not** predictable. We can then test how likely it is in this case that we observer predictability for returns, but not for dividend growth, in the data. To simulate the VAR, we use the parameters as provided in Table 2 of Cochrane (2008), $\phi=0.941$, and $\rho=09638$. However, I write a function so that I can play around with the values later on.
+Now, let's simulate the VAR and assume that returns are **not** predictable. We can then test how likely it is in this case that we observe predictability for returns, but not for dividend growth, in the data. To simulate the VAR, we use the parameters as provided in Table 2 of Cochrane (2008), $\phi=0.941$, and $\rho=09638$. However, I write a function so that I can play around with the values later on.
 
 How does the function work? Well, the core idea of the paper is that log dividend growth, log returns, and log price-dividend ratios are related. So we actually only have to choose two variables to simulate to start with and the third one can then be computed with the Campbell/Shiller identity. Cochrane chooses the dividend-growth and the dividend yield because those two have uncorrelated shocks, so they are easy to simulate.
-
-</div>
 
 The simulations
 -------------------------

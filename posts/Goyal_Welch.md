@@ -252,17 +252,7 @@ ep_stat$plotGG
 
 ![plot of chunk IS_ep]({{urls.theme}}/media/Goyal-Welch/IS_ep.png) 
 
-
 Statistics: $\overline{R}^2$, which is 1.10% and 1.08% for them.
 
-
-Out-of-sample analysis (OOS)
--------------------------
-
-Goyal/Welch (2008) explore three time period specifications:
-
-
-1. OOS forecasts begin 20 years after data are available
-2. In 1965 (or 20 years after data are available, whichever comes later)
-3. Ignores all data prior to 1927 even in the estimation
+So this post showed you how to reproduce the plots of Goyal/Welch (2008) with R. Note that this post is meant to show you how easily this can be done with R, not to replicate exactly the statistics in their paper. A few things are off (plots are not exactly identical, $\overline{R_{IS}}^2$ is not always correct, my $\overline{R_{OOS}}^2$ is wrong), but since I get basically the same results as they do, I don't have the motivation right now to figure out where the really small deviations are coming from. Feel free to tell me if you figure it out, though.
 

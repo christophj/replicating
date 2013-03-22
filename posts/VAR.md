@@ -152,7 +152,7 @@ where $e2$ is a vector where the second element is 1 and the rest 0.
 Implementation
 =========================
 
-Let's try to replicate the results in table 4 of [Chen/Da/Zhao (2009): What Drives Stock Price Movements?](http://www3.nd.edu/~zda/CDZ.pdf) because they use state variables that are all available in the [data set](http://www.hec.unil.ch/agoyal/) of Amit Goyal.
+Let's try to replicate the results in table 4 of [Chen/Da/Zhao (2013): What Drives Stock Price Movements?](http://www3.nd.edu/~zda/CDZ.pdf) because they use state variables that are all available in the [data set](http://www.hec.unil.ch/agoyal/) of Amit Goyal.
 
 They use the following vector of state variables:
 
@@ -164,7 +164,7 @@ where $r_t$ is long annual return, $\Delta d_t$ is log dividend growth, $dp_t$ i
 
 </div>
 
-OK, let's read in the data. (You find more information about the data set on my Goyal/Welch (2008) replication post).
+OK, let's read in the data. (You find more information about the data set on my [Goyal/Welch (2008) replication post](http://christophj.github.com/replicating/r/replicating-goyal-welch-2008/)).
 
 
 ```r
