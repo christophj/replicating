@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Using WRDS on a Linux terminal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Christoph Jäckel">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/replicating/assets/twitter/stylesheets/bootstrap.min.css?0.5798279703815008" type="text/css" rel="stylesheet" media="all">
+<link href="/replicating/assets/twitter/stylesheets/style.css?0.2637614020132104" type="text/css" rel="stylesheet" media="all">
+<link href="/replicating/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css?0.19806625346843276" type="text/css" rel="stylesheet" media="all">
+
+    
+
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-narrow">
+          <a class="brand" href="/replicating/">Replicating</a>
+          <ul class="nav">
+              
+                <li><a href="/replicating/archive">Archive</a></li>
+              
+              
+                <li><a href="/replicating/tags">Tags</a></li>
+              
+              
+                <li><a href="/replicating/categories">Categories</a></li>
+              
+              
+                <li><a href="/replicating/pages">Pages</a></li>
+              
+              
+                <li><a href="/replicating/about">About me and this blog</a></li>
+              
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-narrow">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>Using WRDS on a Linux terminal </h1>
+</div>
+
+<div class="row-fluid post-full">
+  <div class="span12">
+    <div class="date">
+      <span>2013-03-19</strong>
+    </div>
+    <div class="content">
+      <p>I&#39;m currently a visiting graduate researcher at UCLA and one of the nice perks here is access to <a href="http://wrds-web.wharton.upenn.edu/wrds/">WRDS</a>. As they write on their site, they are the leading data research platform in the world. And why do they lead? Well, in my opinion one reason is the very easy access to great data sets. For instance, as soon as I had my account I checked out their awesome documentation sites and noticed that I can easily run scripts on their servers (apparently, this only applies to faculty staff and PhD students, so not everyone can do this). </p>
+
+<p>If you want to do that as well, just start a terminal session in <code>Linux</code> (don&#39;t ask me how this works on <code>Windows</code> or on a <code>Mac</code>, but you find great documentation on WRDS for that as well) and type:</p>
+
+<pre><code>$ ssh username@wrds.wharton.upenn.edu
+</code></pre>
+
+<p>(You also find a very good introduction <a href="http://wrds-web.wharton.upenn.edu/wrds/support/Accessing%20and%20Manipulating%20the%20Data/_002Unix%20Access/Introduction%20to%20the%20WRDS%20Unix%20System.cfm">here</a>. Note that this and the following links only help if you have an account for WRDS. However, if you don&#39;t, this post isn&#39;t relevant for you anyways...)</p>
+
+<p>After that, you are asked to enter your password and BOOM!, you are already on their server! After that, you can start by typing in some <a href="http://wrds-web.wharton.upenn.edu/wrds/support/Accessing%20and%20Manipulating%20the%20Data/_002Unix%20Access/UNIX%20Quick%20Reference%20Sheet.cfm">commands</a>.</p>
+
+<p>To exit, just type</p>
+
+<pre><code>$ exit
+</code></pre>
+
+<p>or </p>
+
+<pre><code>$ logout
+</code></pre>
+
+<p>Now, it is quite easy to run a <code>SAS</code> file on their server. First, you need to know how to write a file...basically, you can start an editor -- such as <code>vi</code>, <code>Emacs</code>, or <code>pico</code> --  in the terminal. I use <code>pico</code> here, because it is a rather simple editor and since I copy/paste the text anyways, this is more than enough.</p>
+
+<p>Let&#39;s start with a simple example (taken from <a href="http://www.ats.ucla.edu/stat/sas/modules/intsas.htm">here</a>) to see that you can actually run <code>SAS</code> on the WRDS server. Type the following into the terminal:</p>
+
+<pre><code>$ pico first_script
+</code></pre>
+
+<p>This opens an editor window in the terminal. In this window, copy/paste the following <code>SAS</code> code:</p>
+
+<pre><code>DATA auto ;
+  INPUT make $ price mpg rep78 weight length foreign ;
+DATALINES;
+AMC     4099 22  3     2930   186    0
+AMC     4749 17  3     3350   173    0
+AMC     3799 22  3     2640   168    0
+Audi    9690 17  5     2830   189    1
+Audi    6295 23  3     2070   174    1
+BMW     9735 25  4     2650   177    1
+Buick   4816 20  3     3250   196    0
+Buick   7827 15  4     4080   222    0
+Buick   5788 18  3     3670   218    0
+Buick   4453 26  3     2230   170    0
+Buick   5189 20  3     3280   200    0
+Buick  10372 16  3     3880   207    0
+Buick   4082 19  3     3400   200    0
+Cad.   11385 14  3     4330   221    0
+Cad.   14500 14  2     3900   204    0
+Cad.   15906 21  3     4290   204    0
+Chev.   3299 29  3     2110   163    0
+Chev.   5705 16  4     3690   212    0
+Chev.   4504 22  3     3180   193    0
+Chev.   5104 22  2     3220   200    0
+Chev.   3667 24  2     2750   179    0
+Chev.   3955 19  3     3430   197    0
+Datsun  6229 23  4     2370   170    1
+Datsun  4589 35  5     2020   165    1
+Datsun  5079 24  4     2280   170    1
+Datsun  8129 21  4     2750   184    1
+;
+RUN;
+
+PROC PRINT DATA=auto(obs=10);
+RUN;
+</code></pre>
+
+<p>This creates a data set named auto with the columns <em>price</em>, <em>mpg</em>, <em>rep78</em>, <em>weight</em>, <em>length</em>, and <em>foreign</em> and some observations. Finally, it prints the first 10 observations.</p>
+
+<p>After you have copied this file in the <code>pico</code> editor, press <code>CTRL + X</code>. Now you should see a dialogue asking you if you want to save the file. Press Yes. Now, to run the programm, just type</p>
+
+<pre><code>$ sas first_script
+</code></pre>
+
+<p>into the terminal. Now, a file named <code>first_script.lst</code> is created, which you can check out by typing</p>
+
+<pre><code>$ more first_script.lst
+</code></pre>
+
+<p>into the terminal. You just run your first script on a WRDS terminal.</p>
+
+<p>Next, let&#39;s try a far more ambitious example: Let&#39;s run the CRSP/IBES matching programm (called <code>iclink</code>) on the terminal. You can find this file <a href="http://wrds-web.wharton.upenn.edu/wrds/support/Data/_010Linking%20Databases/_000iclink.sas">here</a>. A quick disclaimer here: I am a complete <code>SAS</code> noob, so everything I am writing with regard to <code>SAS</code> could be completely wrong. For me, the only thing that matters here is that I get the desired output and this is solely based on my feeling whether or not a copied script run correctly.</p>
+
+<p>Unfortunately, when I copied that <code>iclink.sas</code> into the <code>pico</code> editor as before and let it run on the WRDS terminal, it failed with an error. Checking out the log <code>iclink.log</code> that is created, I saw that all started with the following warning: &quot;WARNING: Apparent symbolic reference lt not resolved.&quot;</p>
+
+<p>It turned out that something in those lines were off:</p>
+
+<pre><code>if (not ((ldate&amp;lt;namedt) or (fdate&amp;gt;nameenddt))) and name_dist &lt; 30 then SCORE = 0;
+    else if (not ((ldate&amp;lt;namedt) or (fdate&amp;gt;nameenddt))) then score = 1;
+  else if name_dist &amp;lt; 30 then SCORE = 2; 
+</code></pre>
+
+<p>Doing some googling, I found <a href="http://support.sas.com/documentation/cdl/en/lrdict/64316/HTML/default/viewer.htm#a001157104.htm">this</a>. So my explanation (again, I have no clue!) is that the script wrapped a <code>&amp;</code> and a <code>;</code> around every <code>lt</code> (less then) and <code>gt</code> (greater then), something it shouldn&#39;t do (or maybe not anymore in <code>SAS 9</code>). Replacing <code>&amp;lt;</code> with <code>&lt;</code> and <code>&amp;gt;</code> with <code>&gt;</code> made it work for me and I was left with a <code>iclink.sas7bdat</code>file in my folder, which was the matching table. </p>
+
+<p>Final task? Downloading that file to my computer. This can be done as follows. Just log out of your <code>ssh</code> session by typing in <code>exit</code> into the terminal and type the following into your terminal:</p>
+
+<pre><code>$ sftp username@wrds.wharton.upenn.edu
+</code></pre>
+
+<p><code>sftp</code> stands for <strong>S</strong>ecure <strong>F</strong>ile <strong>T</strong>ransfer <strong>P</strong>rotocol and allows you to transfer files between a <em>host</em> and a <em>client</em>. In this case, the former is the WRDS server and the latter is your computer. So after you established a connection by entering your password, you can use the standard <code>UNIX</code> commands such as <code>ls</code>, <code>pwd</code>, <code>exit</code>, etc. </p>
+
+<p>To download the file, just go the folder where <code>iclink.sas7bdat</code> is saved and type </p>
+
+<pre><code>$ get iclink.sas7bdat [PATH]
+</code></pre>
+
+<p>into the terminal. <code>[PATH]</code> is optional and can be the path on your local machine, in my case for instance <code>/home/christophj/WRDS/IBES_CRSP_matching_table.sas7bdat</code>.</p>
+
+<p>And that&#39;s how you run <code>SAS</code> files on the WRDS server and get those files (probably data sets) on your local machines.</p>
+
+<p>As a side note: If you want to use another statistical software such as <code>R</code>, it is better to transform the <code>sas7bdat</code> file into a transport data set file. To do so, copy the following <code>SAS</code> code into your <code>pico</code> editor and run the script afterwards:</p>
+
+<pre><code>LIBNAME in_file  &#39;~&#39;;
+LIBNAME out_file XPORT &#39;~/match_t.xpt&#39;;
+
+PROC COPY IN=in_file OUT=out_file;
+        SELECT dat;
+RUN;
+
+</code></pre>
+
+<p>This script selects a file named <em>dat</em> (note that this file name cannot be larger than 8 characters) in the home folder and exports it into a file named <em>match_t.xpt</em>. Obviously, you have to replace <em>dat</em> with the name of the <code>SAS</code> data file. I renamed the file to <em>dat</em> instead of <em>iclink</em> because I had many files starting with that name. (The actual file I want to convert is <em>iclink.sas7bdat</em>, but apparently, you don&#39;t have to specify the file extension.)</p>
+
+    </div>
+    <ul class="tag_box inline">
+      <li><i class="icon-folder-open"></i></li>
+      <li>
+        <a href="/replicating/categories#finance-ref">finance <span>4</span></a>
+      </li>
+    </ul>
+    <ul class="tag_box inline">
+      <li><i class="icon-tags"></i></li>
+      <li>
+        <a href="/replicating/tags#finance-ref">finance <span>4</span></a>
+      </li>
+    </ul>
+    <hr>
+    <div class="pagination">
+      <ul>
+          <li class="prev"><a href="/replicating/r/vector-autoregression-var-in-r" title="Vector autoregression (VAR) in R">&larr; Previous</a></li>
+
+          <li><a href="/replicating/archive">Archive</a></li>
+
+          <li class="next disabled"><a>Next &rarr;</a>
+      </ul>
+    </div>
+    <hr>
+    <div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+</div>
+
+
+      </div>
+
+      <hr>
+      <div class="footer">
+        <p>&copy; Christoph Jäckel 2013
+          with help from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+      </div>
+
+    </div> <!-- /container -->
+
+    <!-- Google Prettify -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/prettify/188.0.0/prettify.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+<!-- end Google Prettify -->
+    <script>
+  var _gaq=[['_setAccount','UA-38388839-1'],['_trackPageview']];
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+  s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+    <!-- INSERT MATHJAX CONFIGURATION FROM MATH.STACKEXCHANGE -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+<script type="text/javascript"
+src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+    
+  </body>
+</html>

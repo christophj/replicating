@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>How to produce nice tables in PDFs using knitr/Sweave and R</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Christoph Jäckel">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/replicating/assets/twitter/stylesheets/bootstrap.min.css?0.7102221166577003" type="text/css" rel="stylesheet" media="all">
+<link href="/replicating/assets/twitter/stylesheets/style.css?0.043332303454102106" type="text/css" rel="stylesheet" media="all">
+<link href="/replicating/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css?0.2648402774743023" type="text/css" rel="stylesheet" media="all">
+
+    
+
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-narrow">
+          <a class="brand" href="/replicating/">Replicating</a>
+          <ul class="nav">
+              
+                <li><a href="/replicating/archive">Archive</a></li>
+              
+              
+                <li><a href="/replicating/tags">Tags</a></li>
+              
+              
+                <li><a href="/replicating/categories">Categories</a></li>
+              
+              
+                <li><a href="/replicating/pages">Pages</a></li>
+              
+              
+                <li><a href="/replicating/about">About me and this blog</a></li>
+              
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-narrow">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>How to produce nice tables in PDFs using knitr/Sweave and R </h1>
+</div>
+
+<div class="row-fluid post-full">
+  <div class="span12">
+    <div class="date">
+      <span>2013-02-03</strong>
+    </div>
+    <div class="content">
+      <p>In this post, I want to show you how to produce nice tables in PDFs, even if you use <a href="http://yihui.name/knitr/">knitr</a> or <a href="http://www.stat.uni-muenchen.de/%7Eleisch/Sweave/">Sweave</a> to produce your reports dynamically. Why should you use tools for  reproducible research in the first place? Well, it guarantees that you always know how you did your analysis. I mean if someone came up to me today and asked me how I computed the mean on page 52 of my diploma thesis, it would take me probably hours to figure that out (or maybe I couldn&#39;t figure it out anymore at all). When someone asks me how I computed the mean of one of my papers written during my PhD, I have a look at my knitr document and could tell him in minutes. That&#39;s the beauty of it, so you should definitely check it out if you don&#39;t use such a tool so far.</p>
+
+<p>However, one thing that bothered me for a while was that the tables produced didn&#39;t really look great. I mean they had all necessary information in it, but I just like tables that look good and with LaTex (knitr or Sweave are just built on top of LaTex, so you still use that) it is normally quite easy to make tables look great, for instance by using the package <strong>booktabs</strong>. In my early knitr days, I just edited the .tex file produced by knitr, but this seemed like a quick and dirty hack that was prone to non-reproducible errors (for instance, you delete one row in the table). That&#39;s what you want to get rid of when using those tools, so I figured out how to edit the tables in the source .Rnw file. This is what I want to show you here with a small minimal example.</p>
+
+<p>There are two key tricks that we have to use:</p>
+
+<ol>
+<li>The option <em>add.to.row</em> in the function <em>print.xtable</em> allows us to enter strings before or after certain rows in your table. </li>
+<li>The backslash is a special character in R. For instance, if you want to get a line break you type &quot;\n&quot;, which does not actually print that string, but inserts a line break. However, in tables we actually want to enter backslashes at the end of rows because two backslashes break a row there. So how do we do that? We just write four backslashes: the first backslash is then considered as a special character, telling R that the next character should be considered as a normal character, not as a special character. So in this case, the backslash should just be printed. Since we need two backslashes, we have to do that twice. I know, it sounds complicated, but it&#39;s quite similar to the percentage sign in LaTex. You can&#39;t just write % because this tells LaTex that it should be a comment. To actually get the percentage sign, you have to write \%.</li>
+</ol>
+
+<p>OK, now we have the basics, so let&#39;s actually produce a nice table. In R, you need to load the <strong>xtable</strong> package and in LaTex, you need to load the <strong>booktabs</strong> package. Also, I use the package <strong>caption</strong>; otherwise, the caption is too close to the table. </p>
+
+<p>Now imagine we want to compare three different regression models (rows) and want to print in the columns the $\alpha$, the $\beta$, the t-value of the $\beta$ coefficient, and the adjusted $R^2$. With randomly drawn data, our minimal example looks like this. </p>
+
+<p>Here is the source code of the minimal example. Save it as a .Rnw file, <em>knit</em> that file and you should get a nice <a href="/replicating/assets/twitter/media/Tables_in_R/Minimal_example.pdf">PDF</a>.</p>
+
+<pre><code class="r">\begin{document}
+
+Here is our minimal example:
+
+&lt;&lt;Code_chunk_Minimal_example, results=&#39;asis&#39;, echo=FALSE&gt;&gt;=
+library(xtable)
+#Just some random data
+x1 &lt;- rnorm(1000); x2 &lt;- rnorm(1000); x3 &lt;- rnorm(1000)
+y  &lt;- 2 + 1 *x1 + rnorm(1000)
+#Run regressions
+reg1 &lt;- summary(lm(y ~ x1))
+reg2 &lt;- summary(lm(y ~ x2))
+reg3 &lt;- summary(lm(y ~ x3))
+#Create data.frame
+df &lt;- data.frame(Model = 1:3,
+                 Alpha = c(reg1$coef[1,1], reg2$coef[1,1], reg3$coef[1,1]),
+                 Beta  = c(reg1$coef[2,1], reg2$coef[2,1], reg3$coef[2,1]),
+                 tV    = c(reg1$coef[2,2], reg2$coef[2,2], reg3$coef[2,2]),
+                 AdjR  = c(reg1$adj.r.s,  reg2$adj.r.s,   reg3$adj.r.s))
+strCaption &lt;- paste0(&quot;\\textbf{Table Whatever} This table is just produced with some&quot;,
+                     &quot;random data and does not mean anything. Just to show you how &quot;,
+                     &quot;things work.&quot;)
+print(xtable(df, digits=2, caption=strCaption, label=&quot;Test_table&quot;), 
+      size=&quot;footnotesize&quot;, #Change size; useful for bigger tables
+      include.rownames=FALSE, #Don&#39;t print rownames
+      include.colnames=FALSE, #We create them ourselves
+      caption.placement=&quot;top&quot;, 
+      hline.after=NULL, #We don&#39;t need hline; we use booktabs
+      add.to.row = list(pos = list(-1, 
+                                   nrow(df)),
+                        command = c(paste(&quot;\\toprule \n&quot;,
+                                          &quot;Model &amp; $\\alpha$ &amp; $\\beta$ &amp; t-value &amp; $R^2$ \\\\\n&quot;, 
+                                          &quot;\\midrule \n&quot;),
+                                    &quot;\\bottomrule \n&quot;)
+                        )
+      )
+
+@
+
+From table \ref{Test_table} you can&#39;t learn a lot, only how it looks is important here.
+
+\end{document}
+</code></pre>
+
+<p>A few notes:</p>
+
+<ul>
+<li>The option <em>add.to.row</em> expects two inputs: a list of integers named <em>pos</em> and a list of strings named <em>command</em>. The latter keeps the  strings that should be entered, the former tells the function <em>print.xtable</em> at which row to enter the strings. In our example, we want to add the first string that keeps the column names before everything else. That is why we use $-1$. The bottomrule should be at the very end of the table, that is why we use <em>nrow(df)</em>.</li>
+<li>We have to set <em>hline.after</em> to NULL because we are not using hlines, but the lines provided by the <strong>booktabs</strong> package (toprule, midrule, and bottomrule).</li>
+<li>The example also shows how to write formulas in the table. Again, the only trick is to know that the backslash is a special character, so we have to write two backslashes.</li>
+</ul>
+
+    </div>
+    <ul class="tag_box inline">
+      <li><i class="icon-folder-open"></i></li>
+      <li>
+        <a href="/replicating/categories#R-ref">R <span>4</span></a>
+      </li>
+      <li>
+        <a href="/replicating/categories#tutorial-ref">tutorial <span>2</span></a>
+      </li>
+    </ul>
+    <ul class="tag_box inline">
+      <li><i class="icon-tags"></i></li>
+      <li>
+        <a href="/replicating/tags#R-ref">R <span>4</span></a>
+      </li>
+      <li>
+        <a href="/replicating/tags#tutorial-ref">tutorial <span>2</span></a>
+      </li>
+    </ul>
+    <hr>
+    <div class="pagination">
+      <ul>
+          <li class="prev"><a href="/replicating/r/replicating-goyal-welch-2008" title="Replicating Goyal/Welch (2008)">&larr; Previous</a></li>
+
+          <li><a href="/replicating/archive">Archive</a></li>
+
+          <li class="next"><a href="/replicating/r/replicating-cochrane-2008" title="Replicating Cochrane (2008)">Next &rarr;</a></li>
+      </ul>
+    </div>
+    <hr>
+    <div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+</div>
+
+
+      </div>
+
+      <hr>
+      <div class="footer">
+        <p>&copy; Christoph Jäckel 2013
+          with help from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+      </div>
+
+    </div> <!-- /container -->
+
+    <!-- Google Prettify -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/prettify/188.0.0/prettify.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+<!-- end Google Prettify -->
+    <script>
+  var _gaq=[['_setAccount','UA-38388839-1'],['_trackPageview']];
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+  s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+    <!-- INSERT MATHJAX CONFIGURATION FROM MATH.STACKEXCHANGE -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+<script type="text/javascript"
+src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+    
+  </body>
+</html>

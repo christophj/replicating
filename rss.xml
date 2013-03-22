@@ -1,0 +1,1298 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+  <channel>
+    <title>Replicating</title>
+    <link>http://sample.com</link>
+    <pubDate>2013-03-21 23:12:27 -0700</pubDate>
+    <item>
+      <title>Using WRDS on a Linux terminal</title>
+      <link>http://sample.com/replicating/finance/using-wrds-on-a-linux-terminal</link>
+      <pubDate>2013-03-19</pubDate>
+      <description>&lt;p&gt;I&amp;#39;m currently a visiting graduate researcher at UCLA and one of the nice perks here is access to &lt;a href="http://wrds-web.wharton.upenn.edu/wrds/"&gt;WRDS&lt;/a&gt;. As they write on their site, they are the leading data research platform in the world. And why do they lead? Well, in my opinion one reason is the very easy access to great data sets. For instance, as soon as I had my account I checked out their awesome documentation sites and noticed that I can easily run scripts on their servers (apparently, this only applies to faculty staff and PhD students, so not everyone can do this). &lt;/p&gt;
+
+&lt;p&gt;If you want to do that as well, just start a terminal session in &lt;code&gt;Linux&lt;/code&gt; (don&amp;#39;t ask me how this works on &lt;code&gt;Windows&lt;/code&gt; or on a &lt;code&gt;Mac&lt;/code&gt;, but you find great documentation on WRDS for that as well) and type:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ ssh username@wrds.wharton.upenn.edu
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;(You also find a very good introduction &lt;a href="http://wrds-web.wharton.upenn.edu/wrds/support/Accessing%20and%20Manipulating%20the%20Data/_002Unix%20Access/Introduction%20to%20the%20WRDS%20Unix%20System.cfm"&gt;here&lt;/a&gt;. Note that this and the following links only help if you have an account for WRDS. However, if you don&amp;#39;t, this post isn&amp;#39;t relevant for you anyways...)&lt;/p&gt;
+
+&lt;p&gt;After that, you are asked to enter your password and BOOM!, you are already on their server! After that, you can start by typing in some &lt;a href="http://wrds-web.wharton.upenn.edu/wrds/support/Accessing%20and%20Manipulating%20the%20Data/_002Unix%20Access/UNIX%20Quick%20Reference%20Sheet.cfm"&gt;commands&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;To exit, just type&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ exit
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;or &lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ logout
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, it is quite easy to run a &lt;code&gt;SAS&lt;/code&gt; file on their server. First, you need to know how to write a file...basically, you can start an editor -- such as &lt;code&gt;vi&lt;/code&gt;, &lt;code&gt;Emacs&lt;/code&gt;, or &lt;code&gt;pico&lt;/code&gt; --  in the terminal. I use &lt;code&gt;pico&lt;/code&gt; here, because it is a rather simple editor and since I copy/paste the text anyways, this is more than enough.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s start with a simple example (taken from &lt;a href="http://www.ats.ucla.edu/stat/sas/modules/intsas.htm"&gt;here&lt;/a&gt;) to see that you can actually run &lt;code&gt;SAS&lt;/code&gt; on the WRDS server. Type the following into the terminal:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ pico first_script
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This opens an editor window in the terminal. In this window, copy/paste the following &lt;code&gt;SAS&lt;/code&gt; code:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;DATA auto ;
+  INPUT make $ price mpg rep78 weight length foreign ;
+DATALINES;
+AMC     4099 22  3     2930   186    0
+AMC     4749 17  3     3350   173    0
+AMC     3799 22  3     2640   168    0
+Audi    9690 17  5     2830   189    1
+Audi    6295 23  3     2070   174    1
+BMW     9735 25  4     2650   177    1
+Buick   4816 20  3     3250   196    0
+Buick   7827 15  4     4080   222    0
+Buick   5788 18  3     3670   218    0
+Buick   4453 26  3     2230   170    0
+Buick   5189 20  3     3280   200    0
+Buick  10372 16  3     3880   207    0
+Buick   4082 19  3     3400   200    0
+Cad.   11385 14  3     4330   221    0
+Cad.   14500 14  2     3900   204    0
+Cad.   15906 21  3     4290   204    0
+Chev.   3299 29  3     2110   163    0
+Chev.   5705 16  4     3690   212    0
+Chev.   4504 22  3     3180   193    0
+Chev.   5104 22  2     3220   200    0
+Chev.   3667 24  2     2750   179    0
+Chev.   3955 19  3     3430   197    0
+Datsun  6229 23  4     2370   170    1
+Datsun  4589 35  5     2020   165    1
+Datsun  5079 24  4     2280   170    1
+Datsun  8129 21  4     2750   184    1
+;
+RUN;
+
+PROC PRINT DATA=auto(obs=10);
+RUN;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This creates a data set named auto with the columns &lt;em&gt;price&lt;/em&gt;, &lt;em&gt;mpg&lt;/em&gt;, &lt;em&gt;rep78&lt;/em&gt;, &lt;em&gt;weight&lt;/em&gt;, &lt;em&gt;length&lt;/em&gt;, and &lt;em&gt;foreign&lt;/em&gt; and some observations. Finally, it prints the first 10 observations.&lt;/p&gt;
+
+&lt;p&gt;After you have copied this file in the &lt;code&gt;pico&lt;/code&gt; editor, press &lt;code&gt;CTRL + X&lt;/code&gt;. Now you should see a dialogue asking you if you want to save the file. Press Yes. Now, to run the programm, just type&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ sas first_script
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;into the terminal. Now, a file named &lt;code&gt;first_script.lst&lt;/code&gt; is created, which you can check out by typing&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ more first_script.lst
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;into the terminal. You just run your first script on a WRDS terminal.&lt;/p&gt;
+
+&lt;p&gt;Next, let&amp;#39;s try a far more ambitious example: Let&amp;#39;s run the CRSP/IBES matching programm (called &lt;code&gt;iclink&lt;/code&gt;) on the terminal. You can find this file &lt;a href="http://wrds-web.wharton.upenn.edu/wrds/support/Data/_010Linking%20Databases/_000iclink.sas"&gt;here&lt;/a&gt;. A quick disclaimer here: I am a complete &lt;code&gt;SAS&lt;/code&gt; noob, so everything I am writing with regard to &lt;code&gt;SAS&lt;/code&gt; could be completely wrong. For me, the only thing that matters here is that I get the desired output and this is solely based on my feeling whether or not a copied script run correctly.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, when I copied that &lt;code&gt;iclink.sas&lt;/code&gt; into the &lt;code&gt;pico&lt;/code&gt; editor as before and let it run on the WRDS terminal, it failed with an error. Checking out the log &lt;code&gt;iclink.log&lt;/code&gt; that is created, I saw that all started with the following warning: &amp;quot;WARNING: Apparent symbolic reference lt not resolved.&amp;quot;&lt;/p&gt;
+
+&lt;p&gt;It turned out that something in those lines were off:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if (not ((ldate&amp;amp;lt;namedt) or (fdate&amp;amp;gt;nameenddt))) and name_dist &amp;lt; 30 then SCORE = 0;
+    else if (not ((ldate&amp;amp;lt;namedt) or (fdate&amp;amp;gt;nameenddt))) then score = 1;
+  else if name_dist &amp;amp;lt; 30 then SCORE = 2; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Doing some googling, I found &lt;a href="http://support.sas.com/documentation/cdl/en/lrdict/64316/HTML/default/viewer.htm#a001157104.htm"&gt;this&lt;/a&gt;. So my explanation (again, I have no clue!) is that the script wrapped a &lt;code&gt;&amp;amp;&lt;/code&gt; and a &lt;code&gt;;&lt;/code&gt; around every &lt;code&gt;lt&lt;/code&gt; (less then) and &lt;code&gt;gt&lt;/code&gt; (greater then), something it shouldn&amp;#39;t do (or maybe not anymore in &lt;code&gt;SAS 9&lt;/code&gt;). Replacing &lt;code&gt;&amp;amp;lt;&lt;/code&gt; with &lt;code&gt;&amp;lt;&lt;/code&gt; and &lt;code&gt;&amp;amp;gt;&lt;/code&gt; with &lt;code&gt;&amp;gt;&lt;/code&gt; made it work for me and I was left with a &lt;code&gt;iclink.sas7bdat&lt;/code&gt;file in my folder, which was the matching table. &lt;/p&gt;
+
+&lt;p&gt;Final task? Downloading that file to my computer. This can be done as follows. Just log out of your &lt;code&gt;ssh&lt;/code&gt; session by typing in &lt;code&gt;exit&lt;/code&gt; into the terminal and type the following into your terminal:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ sftp username@wrds.wharton.upenn.edu
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;sftp&lt;/code&gt; stands for &lt;strong&gt;S&lt;/strong&gt;ecure &lt;strong&gt;F&lt;/strong&gt;ile &lt;strong&gt;T&lt;/strong&gt;ransfer &lt;strong&gt;P&lt;/strong&gt;rotocol and allows you to transfer files between a &lt;em&gt;host&lt;/em&gt; and a &lt;em&gt;client&lt;/em&gt;. In this case, the former is the WRDS server and the latter is your computer. So after you established a connection by entering your password, you can use the standard &lt;code&gt;UNIX&lt;/code&gt; commands such as &lt;code&gt;ls&lt;/code&gt;, &lt;code&gt;pwd&lt;/code&gt;, &lt;code&gt;exit&lt;/code&gt;, etc. &lt;/p&gt;
+
+&lt;p&gt;To download the file, just go the folder where &lt;code&gt;iclink.sas7bdat&lt;/code&gt; is saved and type &lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ get iclink.sas7bdat [PATH]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;into the terminal. &lt;code&gt;[PATH]&lt;/code&gt; is optional and can be the path on your local machine, in my case for instance &lt;code&gt;/home/christophj/WRDS/IBES_CRSP_matching_table.sas7bdat&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;And that&amp;#39;s how you run &lt;code&gt;SAS&lt;/code&gt; files on the WRDS server and get those files (probably data sets) on your local machines.&lt;/p&gt;
+
+&lt;p&gt;As a side note: If you want to use another statistical software such as &lt;code&gt;R&lt;/code&gt;, it is better to transform the &lt;code&gt;sas7bdat&lt;/code&gt; file into a transport data set file. To do so, copy the following &lt;code&gt;SAS&lt;/code&gt; code into your &lt;code&gt;pico&lt;/code&gt; editor and run the script afterwards:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;LIBNAME in_file  &amp;#39;~&amp;#39;;
+LIBNAME out_file XPORT &amp;#39;~/match_t.xpt&amp;#39;;
+
+PROC COPY IN=in_file OUT=out_file;
+        SELECT dat;
+RUN;
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This script selects a file named &lt;em&gt;dat&lt;/em&gt; (note that this file name cannot be larger than 8 characters) in the home folder and exports it into a file named &lt;em&gt;match_t.xpt&lt;/em&gt;. Obviously, you have to replace &lt;em&gt;dat&lt;/em&gt; with the name of the &lt;code&gt;SAS&lt;/code&gt; data file. I renamed the file to &lt;em&gt;dat&lt;/em&gt; instead of &lt;em&gt;iclink&lt;/em&gt; because I had many files starting with that name. (The actual file I want to convert is &lt;em&gt;iclink.sas7bdat&lt;/em&gt;, but apparently, you don&amp;#39;t have to specify the file extension.)&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>Vector autoregression (VAR) in R</title>
+      <link>http://sample.com/replicating/r/vector-autoregression-var-in-r</link>
+      <pubDate>2013-03-12</pubDate>
+      <description>&lt;p&gt;In this post, I want to show how to run a vector autoregression (VAR) in &lt;code&gt;R&lt;/code&gt;. First, I&amp;#39;m gonna explain with the help of a finance example when this method comes in handy and then I&amp;#39;m gonna run one with the help of the &lt;code&gt;vars&lt;/code&gt; package.&lt;/p&gt;
+
+&lt;h1 id="toc_0"&gt;Some theory&lt;/h1&gt;
+
+&lt;p&gt;So what exactly is a VAR? Without going into too much detail here, it&amp;#39;s basically just a generalization of a univariate autoregression (AR) model. An AR model explains &lt;em&gt;one&lt;/em&gt; variable linearly with its own previous values, while a VAR explains a &lt;em&gt;vector&lt;/em&gt; of variables with the vector&amp;#39;s previous values. The VAR model is a statistical tool in the sense that it just fits the coefficients that best describe the data at hand. You still should have some economic intuition on why you put the variables in your vector. For instance, you could easily estimate a VAR with a time-series of the number of car sales in Germany and the temperature in Australia. However, it&amp;#39;s hard to sell to someone &lt;em&gt;why&lt;/em&gt; you are doing this, even if you would find that one variable helps explaining the other...&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s make an example of a VAR often applied in finance (starting with &lt;a href="http://schwert.ssb.rochester.edu/f532/jf93_ca.pdf"&gt;Campbell/Ammer, 1993&lt;/a&gt;). Concretely, I implement an approach to decompose unexpected returns into two parts: cash flow (CF) news and discount rate (DR) news. This is an important issue, as pointed out for instance by &lt;a href="http://www.kent.edu/business/about/upload/ChenZhao_RFS2009.pdf"&gt;Chen/Zhao (2009): Return decomposition&lt;/a&gt;, which notation I&amp;#39;m going to use here as well:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Naturally, &#xFB01;nancial economists place keen interest in the relative importance of CF news and DR news&#x2014;the
+two fundamental components of asset valuation&#x2014;in determining the time-series and cross-sectional variations of stock returns. Relatively speaking, CF news is more related to &#xFB01;rm fundamentals because of its link to production; DR
+news can re&#xFB02;ect time-varying risk aversion or investor sentiment. Their relative importance thus helps greatly to understand how the &#xFB01;nancial market works, and provides the empirical basis for theoretical modeling.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div&gt;
+
+We start with the following decomposition of unexpected equity return $e_{t+1}$, based on the seminal work by Campbell/Shiller (1988):
+
+$$ e_{t+1} = r_{t+1} - E_t r_{t+1} $$
+$$ = (E_{t+1} - E_t) \sum_{j=0}^{\infty} \rho^j \Delta d_{t+1+j} - (E_{t+1} - E_t) \sum_{j=1}^{\infty} \rho^j r_{t+1+j} $$
+$$ = e_{CF,t+1} - e_{DR, t+1} $$
+
+I'm not going into details here about the notation because this is explained for instance in Chen/Zhao (2009) and tons of other papers. However, just a short motivation on what is done here. Basically, investors expect a return for the next period ($E_t r_{t+1}$). However, there is uncertainty in this world and hence, you normally don't get what you expect, but what actually happens, i.e. $r_{t+1}$. For example, investor at the beginning of 2008 most definitely expected a positive return on their stocks, otherwise they wouldn't have had invested in them. But in the end, they ended up with a high negative return because negative news came in. So the unexpected return $e_{t+1}$ is just the difference between the actual realization $r_{t+1}$ and the expected return $E_t r_{t+1}$.
+
+&lt;/div&gt;
+
+&lt;p&gt;However, financial economists are also interested on &lt;em&gt;why&lt;/em&gt; returns didn&amp;#39;t turn out to be the same as expected. Well obviously, some news must have arrived in period $t+1$ which led to a revisal and adjustment of the stock price, which in turn leads to a different return. The Campbell/Shiller decomposition shows that there are only two relevant parameters: news about future expected cash flows and news about future expected returns. As the above quote already shows, separating between these two is an important issue in financial research.&lt;/p&gt;
+
+&lt;div&gt;
+
+Now, let's introduce a VAR process. Concretely, we will assume that there is a vector of state variables $z_t$ that follows a first-order VAR. This means that every state variable in period $t+1$ can be explained by a linear combination of the state variables in $t$ and a constant. Surpressing the constant, we can write
+
+$$ z_{t+1} = \Gamma z_t + u_{t+1} $$
+
+
+We further assume that the first element of the state variable vector $z_{t+1}$ is the equity return $r_{t+1}$. We can then write the discount rate news as follows:
+
+
+$$ -e_{DR,t+1} =  - (E_{t+1} - E_t) \sum_{j=1}^{\infty} \rho^j r_{t+1+j} $$ 
+$$  =  - E_{t+1} \sum_{j=1}^{\infty} \rho^j r_{t+1+j} + E_t \sum_{j=1}^{\infty} \rho^j r_{t+1+j} $$ 
+$$  =  - e1^{\prime} \sum_{j=1}^{\infty} \rho^j \Gamma^j z_{t+1} + \sum_{j=1}^{\infty} \rho^j \Gamma^{j+1} z_{t} $$ 
+$$  =  - e1^{\prime} \sum_{j=1}^{\infty} \rho^j \Gamma^j (\Gamma z_{t} + u_{t+1}) + \sum_{j=1}^{\infty} \rho^j \Gamma^{j+1} z_{t} $$
+$$  =  - e1^{\prime} \sum_{j=1}^{\infty} \rho^j \Gamma^j u_{t+1} $$
+$$  =  - e1^{\prime} \rho \Gamma (I - \rho \Gamma)^{-1} u_{t+1} $$
+$$  =  - e1^{\prime} \lambda u_{t+1} $$
+
+where $\lambda = \rho \Gamma (I - \rho \Gamma)^{-1}$ and $e1$ is a vector whose first element is equal to one and zero otherwise.
+
+&lt;/div&gt;
+
+&lt;p&gt;This derivation looks more complicated than it is. Basically, it&amp;#39;s just the application of a perpetuity or infinite geometric series. Why do we have to apply a perpetuity here? Well, the VAR tells us that returns today are explained by returns from last period multiplied by a persistence factor and a random shock. However, returns last period were explained by returns two periods ago and so on. So this means that every shock is not transitory (which means it only has relevance for one period), but is persistent. &lt;/p&gt;
+
+&lt;p&gt;Also, maybe some of you are like me and get a headache when dealing with matrix multiplication. For those, I want to explain the computation of the $\lambda$ a little longer. This is a generalization of a geometric series which is called a &lt;a href="http://en.wikipedia.org/wiki/Neumann_series"&gt;Neumann series&lt;/a&gt; in mathematics. It states that&lt;/p&gt;
+
+&lt;p&gt;$$ (I - A)^{-1} = \sum_{j=0}^{\infty} A^j $$&lt;/p&gt;
+
+&lt;p&gt;This formula only works if the sum of each row is smaller than 1. There are two subleties to note though:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;$A^j$ does not mean an element-wise operation, but a $j$-times multiplication of the matrix with itself. In &lt;code&gt;R&lt;/code&gt;, though, if you just write $A^j$, you get the former, not the latter. If you want the latter, you have to use a special operator from the &lt;code&gt;expm&lt;/code&gt; package (see discussion on &lt;a href="http://stackoverflow.com/questions/3274818/matrix-power-in-r"&gt;SO&lt;/a&gt;). (I don&amp;#39;t want to confuse you, so to be clear: you don&amp;#39;t need that package here because the above formula is so much easier than applying the sum-formula. But if you want to check that the formula is correct, you can&amp;#39;t just call $A^j$ in &lt;code&gt;R&lt;/code&gt;.) &lt;/li&gt;
+&lt;li&gt;$A^{-1}$ in &lt;code&gt;R&lt;/code&gt; is not identical to what is meant here! In &lt;code&gt;R&lt;/code&gt;, it just returns the reciprocal of each element. In mathematics, it means that the inverse of a matrix is needed ($A A^{-1} = I$). &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The big takeaway is that you have to be really careful when implementing matrix formulas in &lt;code&gt;R&lt;/code&gt;. I don&amp;#39;t have a mathematical background, so I always start the most obvious way, i.e. just type $A^j$ and $A^{-1}$ and get completely non-sensical results.&lt;/p&gt;
+
+&lt;p&gt;So let&amp;#39;s check that the Neumann series formula actually works. Here, I start with $j=1$ instead of $j=0$, so the formula has to be $A (I - A)^{-1}$. &lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;library(expm)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;## Loading required package: Matrix
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;## Loading required package: lattice
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;## Attaching package: &amp;#39;expm&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;## The following object(s) are masked from &amp;#39;package:Matrix&amp;#39;:
+## 
+## expm
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;
+mat &amp;lt;- matrix(c(.1, .2, .3, .4), nrow=2)
+
+res &amp;lt;- matrix(0, nrow=2, ncol=2)
+for (j in 1:1000) {
+  res[1,1] &amp;lt;- res[1,1] + (mat %^% j)[1,1]
+  res[2,1] &amp;lt;- res[2,1] + (mat %^% j)[2,1]
+  res[1,2] &amp;lt;- res[1,2] + (mat %^% j)[1,2]
+  res[2,2] &amp;lt;- res[2,2] + (mat %^% j)[2,2]
+}
+
+res
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;##        [,1]  [,2]
+## [1,] 0.2500 0.625
+## [2,] 0.4167 0.875
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;mat %*% solve(diag(2) - mat)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;##        [,1]  [,2]
+## [1,] 0.2500 0.625
+## [2,] 0.4167 0.875
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see, applying the Neumann series formula or doing it the hard way lead to the same results.&lt;/p&gt;
+
+&lt;div&gt;
+
+Continuing with our example, the CF news can now easily be backed out as the difference between the total unexpected return, which is just the random shock $u_{t+1}$ and the DR news:
+
+$$ e_{CF,t+1} = (e1^{\prime} + e1^{\prime} \lambda) u_{t+1} $$
+
+&lt;/div&gt;
+
+&lt;p&gt;(This, by the way, is the big objection Chen/Zhao (2009) have against the return decomposition approach. Most studies model the DR news part directly and the CF news part is backed out. So every modeling error one makes ends up in the residual which is nothing else than the CF news part. Hence, one cannot distinguish anymore between modeling noise and true CF news. They support their argument by two nice examples. First, they show that the return decomposition approach results in high CF news for government bonds although those securities do not have any CF news part by definition. Second , they show that this approach yields very different results for stocks, subject to the state variable that is used. This supports the hypothesis that the CF news is mostly modeling noise. If you are interested in this literature, make sure to also read Engsted/Pedersen/Tanggaard (2012): Pitfalls in VAR based return decompositions: A clarification. They respond to the critique brought forward by Chen/Zhao and defend the VAR based return decomposition approach.)&lt;/p&gt;
+
+&lt;p&gt;Alternatively, if we include log dividend growth in the state vector as the second element, we can compute the CF news part directly as&lt;/p&gt;
+
+&lt;div&gt;
+
+$$ e_{CF,t+1} = e2^{\prime} (I + \lambda) u_{t+1} = e2^{\prime} (I - \rho \Gamma)^{-1} u_{t+1}  $$
+
+&lt;/div&gt;
+
+&lt;p&gt;where $e2$ is a vector where the second element is 1 and the rest 0.&lt;/p&gt;
+
+&lt;h1 id="toc_1"&gt;Implementation&lt;/h1&gt;
+
+&lt;p&gt;Let&amp;#39;s try to replicate the results in table 4 of &lt;a href="http://www3.nd.edu/%7Ezda/CDZ.pdf"&gt;Chen/Da/Zhao (2013): What Drives Stock Price Movements?&lt;/a&gt; because they use state variables that are all available in the &lt;a href="http://www.hec.unil.ch/agoyal/"&gt;data set&lt;/a&gt; of Amit Goyal.&lt;/p&gt;
+
+&lt;p&gt;They use the following vector of state variables:&lt;/p&gt;
+
+&lt;div&gt;
+
+$$ z_{t+1} = [r_t \Delta d_t dp_t eqis_t]^{\prime} $$
+
+where $r_t$ is long annual return, $\Delta d_t$ is log dividend growth, $dp_t$ is log dividend yield, and $eqis_t$ is the ratio of equity issuing activity as a fraction of total issuing activity.
+
+&lt;/div&gt;
+
+&lt;p&gt;OK, let&amp;#39;s read in the data. (You find more information about the data set on my &lt;a href="http://christophj.github.com/replicating/r/replicating-goyal-welch-2008/"&gt;Goyal/Welch (2008) replication post&lt;/a&gt;).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;intYear &amp;lt;- 1927
+#Use that to check out the other time period
+#intYear &amp;lt;- 1946
+library(data.table)
+library(ggplot2)
+library(lubridate)
+library(vars)
+library(reshape2)
+annual  &amp;lt;- read.csv2(&amp;quot;/home/christophj/Dropbox/FinanceIssues/ReturnPredictability/Data/annual_update_2010.csv&amp;quot;, 
+                     na.strings=c(&amp;quot;NaN&amp;quot;, &amp;quot;NA&amp;quot;), stringsAsFactors=FALSE)
+annual &amp;lt;- as.data.table(annual)
+annual &amp;lt;- annual[, IndexDiv := Index + D12]
+annual &amp;lt;- annual[, dp := log(D12) - log(Index)]
+annual &amp;lt;- annual[, ep := log(E12) - log(Index)]
+vec_dy &amp;lt;- c(NA, annual[2:nrow(annual), log(D12)] - annual[1:(nrow(annual)-1), log(Index)])
+annual &amp;lt;- annual[, dy := vec_dy]
+annual &amp;lt;- annual[, logret   :=c(NA,diff(log(Index)))]
+vec_logretdiv &amp;lt;- c(NA, annual[2:nrow(annual), log(IndexDiv)] - annual[1:(nrow(annual)-1), log(Index)])
+annual &amp;lt;- annual[, logretdiv:=vec_logretdiv]
+annual &amp;lt;- annual[, logRfree := log(Rfree + 1)]
+annual &amp;lt;- annual[, rp_div   := logretdiv - logRfree]
+annual &amp;lt;- annual[, div_growth := c(NA, diff(log(D12)))]
+vec_state &amp;lt;- annual[yyyy &amp;gt;= intYear, list(logretdiv, div_growth, dp, eqis)]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So now that we have the vector of state variables, we can estimate the VAR. To do so, we use the package &lt;code&gt;vars&lt;/code&gt; in &lt;code&gt;R&lt;/code&gt;. &lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;var_est &amp;lt;- VAR(vec_state,   p=1, type=&amp;quot;const&amp;quot;)
+summary(var_est)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;## 
+## VAR Estimation Results:
+## ========================= 
+## Endogenous variables: logretdiv, div_growth, dp, eqis 
+## Deterministic variables: const 
+## Sample size: 83 
+## Log Likelihood: 531.442 
+## Roots of the characteristic polynomial:
+## 0.949 0.419 0.419 0.407
+## Call:
+## VAR(y = vec_state, p = 1, type = &amp;quot;const&amp;quot;)
+## 
+## 
+## Estimation results for equation logretdiv: 
+## ========================================== 
+## logretdiv = logretdiv.l1 + div_growth.l1 + dp.l1 + eqis.l1 + const 
+## 
+##               Estimate Std. Error t value Pr(&amp;gt;|t|)   
+## logretdiv.l1    0.1231     0.1078    1.14   0.2572   
+## div_growth.l1  -0.2007     0.1762   -1.14   0.2581   
+## dp.l1           0.1160     0.0477    2.43   0.0174 * 
+## eqis.l1        -0.5069     0.1954   -2.59   0.0113 * 
+## const           0.5719     0.1722    3.32   0.0014 **
+## ---
+## Signif. codes:  0 &amp;#39;***&amp;#39; 0.001 &amp;#39;**&amp;#39; 0.01 &amp;#39;*&amp;#39; 0.05 &amp;#39;.&amp;#39; 0.1 &amp;#39; &amp;#39; 1 
+## 
+## 
+## Residual standard error: 0.185 on 78 degrees of freedom
+## Multiple R-Squared: 0.137,   Adjusted R-squared: 0.0932 
+## F-statistic: 3.11 on 4 and 78 DF,  p-value: 0.0199 
+## 
+## 
+## Estimation results for equation div_growth: 
+## =========================================== 
+## div_growth = logretdiv.l1 + div_growth.l1 + dp.l1 + eqis.l1 + const 
+## 
+##               Estimate Std. Error t value Pr(&amp;gt;|t|)    
+## logretdiv.l1    0.3484     0.0525    6.64  3.8e-09 ***
+## div_growth.l1   0.2034     0.0857    2.37     0.02 *  
+## dp.l1          -0.0199     0.0232   -0.86     0.39    
+## eqis.l1        -0.1282     0.0951   -1.35     0.18    
+## const          -0.0409     0.0838   -0.49     0.63    
+## ---
+## Signif. codes:  0 &amp;#39;***&amp;#39; 0.001 &amp;#39;**&amp;#39; 0.01 &amp;#39;*&amp;#39; 0.05 &amp;#39;.&amp;#39; 0.1 &amp;#39; &amp;#39; 1 
+## 
+## 
+## Residual standard error: 0.0899 on 78 degrees of freedom
+## Multiple R-Squared: 0.439,   Adjusted R-squared: 0.41 
+## F-statistic: 15.3 on 4 and 78 DF,  p-value: 2.94e-09 
+## 
+## 
+## Estimation results for equation dp: 
+## =================================== 
+## dp = logretdiv.l1 + div_growth.l1 + dp.l1 + eqis.l1 + const 
+## 
+##               Estimate Std. Error t value Pr(&amp;gt;|t|)    
+## logretdiv.l1    0.2267     0.1212    1.87    0.065 .  
+## div_growth.l1   0.4237     0.1979    2.14    0.035 *  
+## dp.l1           0.8928     0.0536   16.65   &amp;lt;2e-16 ***
+## eqis.l1         0.3895     0.2196    1.77    0.080 .  
+## const          -0.4819     0.1935   -2.49    0.015 *  
+## ---
+## Signif. codes:  0 &amp;#39;***&amp;#39; 0.001 &amp;#39;**&amp;#39; 0.01 &amp;#39;*&amp;#39; 0.05 &amp;#39;.&amp;#39; 0.1 &amp;#39; &amp;#39; 1 
+## 
+## 
+## Residual standard error: 0.208 on 78 degrees of freedom
+## Multiple R-Squared: 0.81,    Adjusted R-squared:  0.8 
+## F-statistic:   83 on 4 and 78 DF,  p-value: &amp;lt;2e-16 
+## 
+## 
+## Estimation results for equation eqis: 
+## ===================================== 
+## eqis = logretdiv.l1 + div_growth.l1 + dp.l1 + eqis.l1 + const 
+## 
+##               Estimate Std. Error t value Pr(&amp;gt;|t|)    
+## logretdiv.l1   0.17269    0.05241    3.30   0.0015 ** 
+## div_growth.l1  0.00365    0.08562    0.04   0.9661    
+## dp.l1          0.04280    0.02320    1.85   0.0688 .  
+## eqis.l1        0.46124    0.09498    4.86    6e-06 ***
+## const          0.23049    0.08369    2.75   0.0073 ** 
+## ---
+## Signif. codes:  0 &amp;#39;***&amp;#39; 0.001 &amp;#39;**&amp;#39; 0.01 &amp;#39;*&amp;#39; 0.05 &amp;#39;.&amp;#39; 0.1 &amp;#39; &amp;#39; 1 
+## 
+## 
+## Residual standard error: 0.0898 on 78 degrees of freedom
+## Multiple R-Squared: 0.36,    Adjusted R-squared: 0.328 
+## F-statistic:   11 on 4 and 78 DF,  p-value: 4.04e-07 
+## 
+## 
+## 
+## Covariance matrix of residuals:
+##            logretdiv div_growth        dp      eqis
+## logretdiv    0.03415   0.001279 -0.034346  0.001159
+## div_growth   0.00128   0.008078  0.006991  0.000426
+## dp          -0.03435   0.006991  0.043096 -0.000821
+## eqis         0.00116   0.000426 -0.000821  0.008064
+## 
+## Correlation matrix of residuals:
+##            logretdiv div_growth     dp    eqis
+## logretdiv     1.0000     0.0770 -0.895  0.0699
+## div_growth    0.0770     1.0000  0.375  0.0527
+## dp           -0.8953     0.3747  1.000 -0.0440
+## eqis          0.0699     0.0527 -0.044  1.0000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The function call is pretty much self-explonatory. We estimate a VAR with only one lag. However, let&amp;#39;s explain the output results of the &lt;code&gt;summary&lt;/code&gt; function a little.&lt;/p&gt;
+
+&lt;p&gt;There are basically four summary outputs of regressions stacked up. This makes sense if you check the definition of a VAR further above again; a VAR basically wants to explain every current value of a variable with its previous value (in the case of &lt;code&gt;p=1&lt;/code&gt;, otherwise with its previous value&lt;strong&gt;s&lt;/strong&gt;) and the previous values of the other variables in the vector. Since we only want to allow for linear relations between those variables, we are basically estimating an OLS for every variable in the vector. So we can easily replicate the results by running the OLS ourselves. Let&amp;#39;s do that for the &lt;code&gt;eqis&lt;/code&gt; variable in the data set. (I will use the package  &lt;code&gt;dyn&lt;/code&gt; for that because we have to lag the independent variables. To use the package, I have to transform the vector of state variables into a time-series object.)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;library(dyn)
+summary(dyn$lm(eqis ~ lag(logretdiv, -1) + 
+                      lag(div_growth, -1) + 
+                      lag(dp, -1) + 
+                      lag(eqis, -1), 
+               data=ts(vec_state)))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;## 
+## Call:
+## lm(formula = dyn(eqis ~ lag(logretdiv, -1) + lag(div_growth, 
+##     -1) + lag(dp, -1) + lag(eqis, -1)), data = ts(vec_state))
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.2830 -0.0504 -0.0152  0.0311  0.3425 
+## 
+## Coefficients:
+##                     Estimate Std. Error t value Pr(&amp;gt;|t|)    
+## (Intercept)          0.23049    0.08369    2.75   0.0073 ** 
+## lag(logretdiv, -1)   0.17269    0.05241    3.30   0.0015 ** 
+## lag(div_growth, -1)  0.00365    0.08562    0.04   0.9661    
+## lag(dp, -1)          0.04280    0.02320    1.85   0.0688 .  
+## lag(eqis, -1)        0.46124    0.09498    4.86    6e-06 ***
+## ---
+## Signif. codes:  0 &amp;#39;***&amp;#39; 0.001 &amp;#39;**&amp;#39; 0.01 &amp;#39;*&amp;#39; 0.05 &amp;#39;.&amp;#39; 0.1 &amp;#39; &amp;#39; 1 
+## 
+## Residual standard error: 0.0898 on 78 degrees of freedom
+##   (2 observations deleted due to missingness)
+## Multiple R-squared: 0.36,    Adjusted R-squared: 0.328 
+## F-statistic:   11 on 4 and 78 DF,  p-value: 4.04e-07
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see, we are getting exactly the same coefficients this way. &lt;/p&gt;
+
+&lt;p&gt;Next, let&amp;#39;s calculate $\lambda$. To do so, $\rho$ is set to $0.96$.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;rho &amp;lt;- 0.96
+Gamma &amp;lt;- t(sapply(coef(var_est), FUN=function(df) {df[1:4, 1]}))
+lambda &amp;lt;- (rho * Gamma) %*% solve(diag(4) - rho * Gamma)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A short explanation on how the &lt;code&gt;Gamma&lt;/code&gt; is computed. First, remember that $\Gamma$ is the matrix of coefficients that basically completely describes the VAR. So for instance, to explain the log equity returns which is the first element of the state vector, we use the first row of $\Gamma$. The first element in this row is the OLS regression coefficient of the previous log equity return regressed on the current equity return, the second element is the coefficient of the previous log dividend growth on the current loq equity return, and so forth. &lt;/p&gt;
+
+&lt;p&gt;However, the function &lt;code&gt;coef&lt;/code&gt; applied on a &lt;code&gt;vars&lt;/code&gt; object doesn&amp;#39;t return such a matrix, but a list of results, where each element of the list is basically the results of one OLS. So we want to loop through those list elements and get the coefficients, which are the first four rows in the first column of each list object. This is exactly what is done in the &lt;code&gt;sapply&lt;/code&gt; call.&lt;/p&gt;
+
+&lt;p&gt;Now we have all the ingredients to compute both the DR and the CF news. Also, the return news is just the residual:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;u &amp;lt;- resid(var_est)[, 1]
+DR_news &amp;lt;- as.vector(c(1,0,0,0) %*% lambda %*% t(resid(var_est)))
+CF_news &amp;lt;- as.vector(c(0,1,0,0) %*% (diag(4) + lambda) %*% t(resid(var_est)))
+#Alternatively, backed out
+CF_news_backed &amp;lt;- as.vector((c(1,0,0,0) + c(1,0,0,0) %*% lambda) %*% t(resid(var_est)))
+#Other ways of writing that
+#CF_news_backed &amp;lt;- as.vector(c(1,0,0,0) %*% t(resid(var_est)) + c(1,0,0,0) %*% lambda %*% t(resid(var_est)))
+#CF_news_backed &amp;lt;- u + DR_news
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;#Regression coefficients as reported in table 4 of Chen/Da/Zhao (2013)
+summary(lm(DR_news ~ u))$coef[2, 1]*-1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;## [1] 0.5612
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;summary(lm(CF_news_backed ~ u))$coef[2, 1]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;## [1] 0.4388
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;summary(lm(CF_news ~ u))$coef[2, 1]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;## [1] 0.4038
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;#Variance decomposition; terms have to add to 1
+var(DR_news)/var(u)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;## [1] 0.586
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;var(CF_news_backed)/var(u)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;## [1] 0.4637
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;-2*cov(CF_news_backed, DR_news)/var(u)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;## [1] -0.0497
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Those results are pretty similar to Chen/Da/Zhao (2013). So for the time period $1927-2010$, DR and CF news seem to be equally important. If you set &lt;code&gt;intYear &amp;lt;- 1946&lt;/code&gt;, however, the regression coefficient of discount rate news on unexpected return is over 1, while CF news has a negative coefficient. This means that positive news on cash flows has a negative impact on returns, which is counterintuitive. As you can see, this approach is quite sensitive to the time period. &lt;/p&gt;
+
+&lt;!---
+Finally, let's also run regressions for longer periods. To do so, we have to implement the formulas from appendix A.3 in their paper:
+--&gt;
+</description>
+    </item>
+    <item>
+      <title>How to set up a new blog with ruhoh on github</title>
+      <link>http://sample.com/replicating/tutorial/how-to-set-up-a-new-blog-with-ruhoh-on-github</link>
+      <pubDate>2013-02-10</pubDate>
+      <description>&lt;p&gt;Since it took me quite some effort to get this blog running, I give a short summary of the steps I went through. Note, however, that I am really a beginner at this, so I only point you to those links that helped me. Don&amp;#39;t even bother to ask me when something doesn&amp;#39;t work. Not that I wouldn&amp;#39;t want to help...I just couldn&amp;#39;t. Oh, and just to be clear: this guide assumes that you are using Linux.&lt;/p&gt;
+
+&lt;h2 id="toc_0"&gt;Get ruhoh running&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href="http://ruhoh.com/"&gt;ruhoh&lt;/a&gt; is a static blogging platform. Why would you want to use that in the first place? Good question! The point is that I wanted to publish some of my replications of finance papers and for that I wanted to be able to write both formulas and code snippets. Turns out that this isn&amp;#39;t so easy with normal blogging platforms. For instance, I signed up for Bloggers from Google and couldn&amp;#39;t get it to work. I wasn&amp;#39;t able to get &lt;code&gt;mathjax&lt;/code&gt; to run.&lt;/p&gt;
+
+&lt;p&gt;So after some research, I found &lt;a href="http://jekyllbootstrap.com/"&gt;Jekyll/Bootstrap&lt;/a&gt;, which seemed to do what I wanted. However, on that webpage the maintainer wrote that he now focused his efforts on &lt;code&gt;ruhoh&lt;/code&gt; instead, so I thought that I might as well just do that. Note that &lt;code&gt;ruhoh&lt;/code&gt; is quite new though, so &lt;code&gt;Jekyll&lt;/code&gt; is definitely better documented.&lt;/p&gt;
+
+&lt;p&gt;Anyways, to get &lt;code&gt;ruhoh&lt;/code&gt; running, just follow the &lt;a href="https://github.com/ruhoh/blog/tree/2.0.alpha#readme"&gt;installer guide&lt;/a&gt;. It looks pretty straightforward, but I had to deal with the issue that there are a lot of dependencies. I can&amp;#39;t all memorize them now, but my workflow was something like this:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Write command from installer guide into terminal.&lt;/li&gt;
+&lt;li&gt;Get message on why this failed (&lt;em&gt;xyz&lt;/em&gt; is missing).&lt;/li&gt;
+&lt;li&gt;Googling message.&lt;/li&gt;
+&lt;li&gt;Dealing with it (mostly just installing &lt;em&gt;xyz&lt;/em&gt;, which often also needed &lt;em&gt;abc&lt;/em&gt;, etc.)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;So after that was done, you should have a folder somewhere in your  folder structure with all the subfolder copied from Jade&amp;#39;s github page. To check if it worked out, fire up a terminal, go to the folder you copied everything into, and type:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ bundle exec rackup -p 9292
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This starts a web server that hosts your blog here: &lt;a href="http://localhost:9292"&gt;http://localhost:9292&lt;/a&gt;. So basically, you can check out your blog in the browser. Now you can edit all the posts and play around.&lt;/p&gt;
+
+&lt;h2 id="toc_1"&gt;Install mathjax&lt;/h2&gt;
+
+&lt;p&gt;You have to install a &lt;code&gt;mathjax&lt;/code&gt; widget, which sounds more complicated than it is. Your folder structure should have one folder named &lt;em&gt;widgets&lt;/em&gt;. In this folder, add another folder named &lt;em&gt;mathjax&lt;/em&gt;, and a subfolder named &lt;em&gt;layouts&lt;/em&gt; and copy &lt;a href="https://github.com/ramnathv/ramnathv.ruhoh.com/blob/master/widgets/mathjax/layouts/mathjax.html"&gt;this file&lt;/a&gt; into the &lt;em&gt;layouts&lt;/em&gt; folder. Actually, if you check out that file online, you also see the folder structure it has to be into.&lt;/p&gt;
+
+&lt;p&gt;Finally, you have to put {{{ mathjax }}} in your &lt;em&gt;default.html&lt;/em&gt; file in the &lt;code&gt;/themes/.../layouts&lt;/code&gt; subfolder. &lt;/p&gt;
+
+&lt;p&gt;Now you should be able to write equations in LaTex. In-text math should be surrounded with $ signs, equations in a separate line with double dollar signs. To check if it worked, copy this &lt;a href="https://gist.github.com/plusjade/2699636"&gt;sample file&lt;/a&gt; into your pages folder and check it out in your localhost session. &lt;/p&gt;
+
+&lt;p&gt;The only issue I had was that I couldn&amp;#39;t use underscores, which are quite important in LaTex. However, this &lt;a href="http://stackoverflow.com/questions/10438937/is-there-a-markdown-parser-supported-on-jekyll-that-plays-nicely-with-mathjax"&gt;SO post&lt;/a&gt; solved this problem.&lt;/p&gt;
+
+&lt;h2 id="toc_2"&gt;Deploying your blog on github&lt;/h2&gt;
+
+&lt;p&gt;If you are happy with how your blog looks locally, it&amp;#39;s time to move it to the world wide web. You could find a good web hoster or you could decide to just use Github pages: it&amp;#39;s for free and your already use github (otherwise you couldn&amp;#39;t have installed &lt;code&gt;ruhoh&lt;/code&gt;). Here&amp;#39;s just my personal rant though: the Github pages documentation is really bad. Seriously, I wouldn&amp;#39;t call it a documentation at all. It&amp;#39;s a bunch of FAQs that don&amp;#39;t give you any big picture at all. To be fair, it&amp;#39;s probably written for the average github user who is already quite familiar with this service. Sadly, I&amp;#39;m not...&lt;/p&gt;
+
+&lt;p&gt;However, Ramnath Vaidyanathan rescued me again (he also posted the Mathjax-widget code) and posted instructions on how to deploy your blog on Github pages. However, the page is down now so I just post the code here.&lt;/p&gt;
+
+&lt;p&gt;First, you have to compile your blog:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cd /PATH_OF_YOUR_BLOG
+$ ruhoh compile
+$ cd compiled
+$ cd REPO (in my case: cd replicating)
+$ git init .
+$ git add .
+$ git commit -m &amp;quot;update blog&amp;quot;
+$ git push https://github.com/$USER/$REPO.git master:gh-pages --force
+$ rm -rf .git
+$ cd ../..
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So you basically deploy the compiled version of your blog on &lt;code&gt;github&lt;/code&gt; and then get rid of all traces. As Ramnath writes, it is not a good idea to put generated files under version control.&lt;/p&gt;
+
+&lt;p&gt;Before I run those commands though, I pushed all my blog files to github as well. I&amp;#39;m not sure if this is necessary, but I did it anyways. To do so, you have to run the following commands in the working directory where your blog is saved:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git init
+$ git add .
+$ git commit -m &amp;quot;First commit to blog.&amp;quot;
+$ git remote add origin git@github.com:USER/REPO.git
+$ git push -u origin master
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Obviously, you have to replace USER with your github username and REPO with the repository that you have created before on the github.com website. If you do this, you should see all the files pushed to github.com and it should look similar to my &lt;a href="https://github.com/christophj"&gt;repository&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id="toc_3"&gt;Google analytics&lt;/h2&gt;
+
+&lt;p&gt;Setting up Google Analytics is straightforward. Just set up Analytics on Google&amp;#39;s &lt;a href="google.com/analytics"&gt;webpage&lt;/a&gt;. You should then get a tracking number that you have to enter into the &lt;em&gt;config.yml&lt;/em&gt; file in the &lt;strong&gt;widget&lt;/strong&gt; folder of your blog. &lt;/p&gt;
+
+&lt;p&gt;Now it is important to push those updated to &lt;code&gt;github&lt;/code&gt; again and wait. It took a day or so for me until Google started tracking my blog.&lt;/p&gt;
+
+&lt;h2 id="toc_4"&gt;Next steps&lt;/h2&gt;
+
+&lt;p&gt;The next steps I&amp;#39;m playing are the following:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Change the look of the code snippets. I don&amp;#39;t really like the gray, it looks too pale.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If I figure those things out, I update this post here.&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>Replicating Cochrane (2008)</title>
+      <link>http://sample.com/replicating/r/replicating-cochrane-2008</link>
+      <pubDate>2013-02-09</pubDate>
+      <description>&lt;p&gt;In this post, I want to replicate some results of Cochrane (2008), The Dog That Did Not Bark: A Defense of Return Predictability, Review of Financial Studies, 21 (4). You can find that paper on John Cochrane&amp;#39;s &lt;a href="http://faculty.chicagobooth.edu/john.cochrane/research/papers/cochrane%20dog%20that%20did%20not%20bark.pdf"&gt;website&lt;/a&gt;. I wrote some thoughts about return predictability already on my &lt;a href="http://christophj.github.com/replicating/r/replicating-goyal-welch-2008/"&gt;Goyal/Welch replication post&lt;/a&gt;, so please check this one out for some more background. Or just read the papers, they explain it better than I could anyway.&lt;/p&gt;
+
+&lt;h2 id="toc_0"&gt;Replication of the forecasting regressions in Cochrane&amp;#39;s Table 1&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;#39;s first repeat the forecasting regressions Cochrane runs in Table 1 of his paper. He uses data in real terms, i.e. deflated by the CPI, and on an annual basis ranging from 1926 to 2004. I do not have access to CRSP, but fortunately, we find similar data on Robert Shiller&amp;#39;s &lt;a href="http://www.econ.yale.edu/%7Eshiller/data.htm"&gt;website&lt;/a&gt;. His data is saved in an Excel-file and is formatted in such a way that you cannot just read it into R. So you manually have to delete unnecessary rows and save the sheet &lt;em&gt;Data&lt;/em&gt; as a .CSV file. Also, here is the naming convention I apply for the relevant columns:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;RealR&lt;/strong&gt;: Real One_Year Interest Rate (column H as of february 2013). Note that Cochrane uses real return on 3-month Treasury-Bills, but I&amp;#39;m to lazy to find that somewhere else and match it. &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;RealP&lt;/strong&gt;: RealP Stock Price (column P as of february 2013).&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;RealD&lt;/strong&gt;: RealD S&amp;amp;P Dividend (column O as of february 2013).&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Ret_SP&lt;/strong&gt;: Return on S&amp;amp;P Composite (column P as of february 2013).&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Year&lt;/strong&gt;: First column with the years.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;library(data.table)
+#CHANGE TO THE DIRECTORY IN WHICH YOU SAVED THE FILE
+strPath &amp;lt;- &amp;quot;/home/christophj/Dropbox/R_Package_Development/vignettes_REM/Data/Robert_Shiller_Data_Formatted.csv&amp;quot;
+#strPath &amp;lt;- &amp;quot;C:/Dropbox/R_Package_Development/vignettes_REM/Data/Robert_Shiller_Data_Formatted.csv&amp;quot;
+shiller_data &amp;lt;- as.data.table(read.csv(strPath))
+strStart &amp;lt;- 1924; strEnd &amp;lt;- 2005
+#GET RELEVANT DATA
+shiller_data &amp;lt;- shiller_data[, Dgrowth := c(NA, exp(diff(log(RealD))))]
+shiller_data &amp;lt;- shiller_data[, DP := RealD/RealP]
+vec_Ret_SP &amp;lt;- c(NA, shiller_data[2:nrow(shiller_data), RealP + RealD]/shiller_data[1:(nrow(shiller_data)-1), RealP ])
+shiller_data &amp;lt;- shiller_data[, Ret_SP := vec_Ret_SP]
+shiller_data &amp;lt;- shiller_data[, Ex_Ret_SP := Ret_SP - RealR]
+shiller_data &amp;lt;- shiller_data[Year &amp;gt;= strStart &amp;amp; Year &amp;lt;= strEnd, list(Ret_SP, Ex_Ret_SP, RealR, RealD, Dgrowth, DP)]
+summary(shiller_data)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;##      Ret_SP        Ex_Ret_SP           RealR           RealD      
+##  Min.   :0.616   Min.   :-0.5297   Min.   :0.853   Min.   : 6.43  
+##  1st Qu.:0.948   1st Qu.:-0.0554   1st Qu.:0.993   1st Qu.:10.13  
+##  Median :1.101   Median : 0.0791   Median :1.018   Median :14.05  
+##  Mean   :1.091   Mean   : 0.0750   Mean   :1.016   Mean   :13.39  
+##  3rd Qu.:1.218   3rd Qu.: 0.1928   3rd Qu.:1.036   3rd Qu.:17.22  
+##  Max.   :1.539   Max.   : 0.5534   Max.   :1.146   Max.   :22.68  
+##     Dgrowth            DP        
+##  Min.   :0.647   Min.   :0.0110  
+##  1st Qu.:0.983   1st Qu.:0.0312  
+##  Median :1.021   Median :0.0406  
+##  Mean   :1.022   Mean   :0.0413  
+##  3rd Qu.:1.062   3rd Qu.:0.0514  
+##  Max.   :1.499   Max.   :0.0806
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With the summary statistics, you can check if you get the same results as I do. Now we have all the ingredients to run the regressions. &lt;/p&gt;
+
+&lt;p&gt;Since we have to lag the independent variable by one year, I use the R package &lt;code&gt;dyn&lt;/code&gt;, which makes lagging easier. However, we have to convert our &lt;code&gt;data.table&lt;/code&gt; to a time-series object first with the &lt;code&gt;ts&lt;/code&gt; function.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;library(dyn)
+library(xtable)
+ts_data &amp;lt;- ts(data=shiller_data, start=strStart, end=strEnd)
+list_reg &amp;lt;- list(reg_R_DP = dyn$lm(Ret_SP ~ lag(DP, -1), data=ts_data), 
+                 reg_ER_DP = dyn$lm(Ex_Ret_SP ~ lag(DP, -1), data=ts_data),
+                 reg_Dgrowth_DP = dyn$lm(Dgrowth ~ lag(DP, -1), data=ts_data), 
+                 reg_r_dp = dyn$lm(log(Ret_SP) ~ log(lag(DP, -1)), data=ts_data), 
+                 reg_dgrowth_dp = dyn$lm(log(Dgrowth) ~ log(lag(DP, -1)), data=ts_data),
+                 reg_dp_next_dp = dyn$lm(log(DP) ~ log(lag(DP, -1)), data=ts_data))
+tab &amp;lt;- t(as.data.frame(lapply(list_reg[1:5], FUN = function(reg) {
+      c(b  = summary(reg)$coef[2,1], 
+        t  = summary(reg)$coef[2,3],
+        R2 = summary(reg)$adj.r.sq * 100,
+        sd = sd(reg$fitted) * 100)
+      })))
+#Covariance matrix from table 2
+#cor(cbind(list_reg[[4]]$resid, list_reg[[5]]$resid, list_reg[[6]]$resid))
+#apply(cbind(list_reg[[4]]$resid, list_reg[[5]]$resid, list_reg[[6]]$resid), 2, sd)
+print(xtable(tab), type=&amp;quot;HTML&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;!-- html table generated in R 2.15.1 by xtable 1.7-1 package --&gt;
+
+&lt;!-- Thu Mar 14 19:14:33 2013 --&gt;
+
+&lt;TABLE border=1&gt;
+&lt;TR&gt; &lt;TH&gt;  &lt;/TH&gt; &lt;TH&gt; b &lt;/TH&gt; &lt;TH&gt; t &lt;/TH&gt; &lt;TH&gt; R2 &lt;/TH&gt; &lt;TH&gt; sd &lt;/TH&gt;  &lt;/TR&gt;
+  &lt;TR&gt; &lt;TD align="right"&gt; reg_R_DP &lt;/TD&gt; &lt;TD align="right"&gt; 3.19 &lt;/TD&gt; &lt;TD align="right"&gt; 2.23 &lt;/TD&gt; &lt;TD align="right"&gt; 4.73 &lt;/TD&gt; &lt;TD align="right"&gt; 4.76 &lt;/TD&gt; &lt;/TR&gt;
+  &lt;TR&gt; &lt;TD align="right"&gt; reg_ER_DP &lt;/TD&gt; &lt;TD align="right"&gt; 3.45 &lt;/TD&gt; &lt;TD align="right"&gt; 2.31 &lt;/TD&gt; &lt;TD align="right"&gt; 5.14 &lt;/TD&gt; &lt;TD align="right"&gt; 5.14 &lt;/TD&gt; &lt;/TR&gt;
+  &lt;TR&gt; &lt;TD align="right"&gt; reg_Dgrowth_DP &lt;/TD&gt; &lt;TD align="right"&gt; 0.26 &lt;/TD&gt; &lt;TD align="right"&gt; 0.32 &lt;/TD&gt; &lt;TD align="right"&gt; -1.13 &lt;/TD&gt; &lt;TD align="right"&gt; 0.39 &lt;/TD&gt; &lt;/TR&gt;
+  &lt;TR&gt; &lt;TD align="right"&gt; reg_r_dp &lt;/TD&gt; &lt;TD align="right"&gt; 0.09 &lt;/TD&gt; &lt;TD align="right"&gt; 1.91 &lt;/TD&gt; &lt;TD align="right"&gt; 3.22 &lt;/TD&gt; &lt;TD align="right"&gt; 3.95 &lt;/TD&gt; &lt;/TR&gt;
+  &lt;TR&gt; &lt;TD align="right"&gt; reg_dgrowth_dp &lt;/TD&gt; &lt;TD align="right"&gt; 0.00 &lt;/TD&gt; &lt;TD align="right"&gt; 0.12 &lt;/TD&gt; &lt;TD align="right"&gt; -1.25 &lt;/TD&gt; &lt;TD align="right"&gt; 0.15 &lt;/TD&gt; &lt;/TR&gt;
+   &lt;/TABLE&gt;
+
+&lt;p&gt;Technically, it is a nice trick to save objects like the regression results in lists. (Note that if I would have had more regressions to run here, I would have written a small customed function in which the dependent and independent variables can be passed dynamically. However, for five regressions this isn&amp;#39;t really necessary). Now you can loop through every object of the list with &lt;code&gt;lapply&lt;/code&gt; and apply a function on that object. In the above example, I just return the four elements I&amp;#39;m interested in: regression coefficient, t-value, adjusted $R^2$, and standard deviation of the fitted values of the regression.&lt;/p&gt;
+
+&lt;p&gt;As you can see, the regressions work by and large. Both returns and expected returns have a positive and significant regression coefficient, although mine is slightly lower than Cochrane&amp;#39;s. This also leads to lower t-values. Also, I get a positive regression coefficient for the dividend growth regression that is close to one. As a side note: This data set probably assumes that dividends are reinvested in the stock market. For instance, &lt;a href="http://papers.ssrn.com/sol3/papers.cfm?abstract_id=1723463"&gt;Koijen/van Nieuwerburgh (2011)&lt;/a&gt; argue that it is better to reinvest dividends at the risk-free rate. Otherwise, what you actually measure are the properties of the stock market, i.e. realized returns, not realized dividends. Since you want to distinguish between the two, you should be careful here. They show results that actually give evidence for dividend growth predictability in the correct direction, i.e. high dividend-price ratios predict low future dividend growth.&lt;/p&gt;
+
+&lt;p&gt;To the interpretation: Slope coefficients around 3 in the top two row mean that when &amp;quot;dividend yields rise one percentage point, prices rise another two percentage points on average, rather than declining one percentage point to offset the extra dividends and render returns unpredictable&amp;quot; (Cochrane, 2008, p. 1533).&lt;/p&gt;
+
+&lt;h2 id="toc_1"&gt;The basic set up&lt;/h2&gt;
+
+&lt;p&gt;He goes on and sets up a simple first-order VAR representation that simultaneously models log returns, log dividend yields, and log dividend growth:&lt;/p&gt;
+
+&lt;div&gt;
+
+$$ r_{t+1} = a_r + b_r (d_t - p_t) + \epsilon^r_{t+1} $$
+$$ \Delta d_{t+1} = a_d + b_d (d_t - p_t) + \epsilon^d_{t+1} $$
+$$ (d_{t+1} - p_{t+1}) = a_{dp} + \phi (d_t - p_t) + \epsilon^{dp}_{t+1} $$
+
+$b_r$ and $b_d$ are the regression coefficients we estimated before, $\phi$ is the dividend-yield autocorrelation.
+
+Also, the Campbell-Shiller (1988) linearization gives us an approximate identity for log returns subject to dividend growth and price-dividend ratios:
+
+$$ r_{t+1} \approx \rho (p_{t+1} - d_{t+1}) + \Delta d_{t+1} - (p_t - d_t) $$
+
+where $\rho = PD/(1+PD)$ and PD is the price-dividend ratio about which one linearizes. Normally, you take the mean here. As standard in finance papers, lowercase letters denote logarithms of variables. It is, however,  very important to note that all variables here are demeaned. Hence, $a_r$, $a_d$, and $a_dp$ are zero in theory and we can ignore them in this this analysis.
+
+The parameters $b_r$, $b_d$, and $\phi$ in the first three equations are easily obtained via linear regressions. Also, we can rearrange the last equation to get
+
+$$ (d_t - p_t) \approx r_{t+1} + \rho (d_{t+1} - p_{t+1}) - \Delta d_{t+1} $$
+
+Now, divide both sides of the equation by $d_t - p_t$ to get
+
+$$ 1 = \frac{r_{t+1}}{d_t - p_t} + \frac{\rho (d_{t+1} - p_{t+1})}{d_t - p_t} - \frac{\Delta d_{t+1}}{d_t - p_t} $$
+
+However, the fractions are just the projections of the log returns, the log dividend yields of next year, and log dividend growth, respectively, on the current dividend yield. To see that, take the expectations on the first equation:
+
+$$ E_t[r_{t+1}] = E_t[a_r + b_r (d_t - p_t) + \epsilon^r_{t+1}] $$
+$$ E_t[r_{t+1}] = b_r (d_t - p_t)$$
+$$ b_r = \frac{E_t[r_{t+1}]}{(d_t - p_t)}$$
+
+So we can write:
+
+$$1 \approx b_r + \rho \phi - b_d $$
+
+This is a very important equation. It tells us that, since $\rho \phi$ is smaller than one by economic reasoning, that either $b_r$ or $b_d$ has to be different from zero, i.e. either log returns or dividend growth have to be predictable.
+
+Also, we can link the errors by substituting the terms in the Campbell/Shiller (1988) equation with the definitions of the first three equations:
+
+$$ a_r + b_r (d_t - p_t) + \epsilon^r_{t+1} = -\rho (a_{dp} + \phi (d_t - p_t) + \epsilon^{dp}_{t+1}) + a_d + b_d (d_t - p_t) + \epsilon^d_{t+1} - (p_t - d_t) $$
+
+We can again ignore the intercepts because we are dealing with demeaned variables here. Also, $(b_r + \rho \phi - b_d) (d_t - p_t) + (p_t -d_t)=0$. So we get:
+
+$$ \epsilon^r_{t+1} =  \epsilon^d_{t+1} - \rho \epsilon^{dp}_{t+1} $$
+
+&lt;/div&gt;
+
+&lt;p&gt;Now, let&amp;#39;s simulate the VAR and assume that returns are &lt;strong&gt;not&lt;/strong&gt; predictable. We can then test how likely it is in this case that we observe predictability for returns, but not for dividend growth, in the data. To simulate the VAR, we use the parameters as provided in Table 2 of Cochrane (2008), $\phi=0.941$, and $\rho=09638$. However, I write a function so that I can play around with the values later on.&lt;/p&gt;
+
+&lt;p&gt;How does the function work? Well, the core idea of the paper is that log dividend growth, log returns, and log price-dividend ratios are related. So we actually only have to choose two variables to simulate to start with and the third one can then be computed with the Campbell/Shiller identity. Cochrane chooses the dividend-growth and the dividend yield because those two have uncorrelated shocks, so they are easy to simulate.&lt;/p&gt;
+
+&lt;h2 id="toc_2"&gt;The simulations&lt;/h2&gt;
+
+&lt;div&gt;
+
+Hence, we simulate the following system:
+
+$$ \begin{bmatrix} d_{t+1} - p_{t+1} \\ \Delta d_{t+1} \\ r_{t+1} \end{bmatrix} = \begin{bmatrix} \phi \\ \rho \phi - 1 \\ 0  \end{bmatrix} (d_t - p_t)  + \begin{bmatrix} \epsilon^{dp}_{t+1} \\ \epsilon^d_{t+1} \\ \epsilon^d_{t+1} - \rho \epsilon_{t+1}^{dp}  \end{bmatrix} $$
+
+The remaining steps according to Cochrane (2008, p. 1542): "I use the sample estimate of the covariance matrix of $\epsilon^{dp}$ and $\epsilon^d$. I simulate 50,000 artificial data sets from each null. For $\phi &lt; 1$, I draw the first observation $d_0 - p_0$ from the unconditional density $d_0 - p_0 \sim N[0, \sigma^2(\epsilon^{dp})/(1-\phi^2)]$. For $\phi \geq 1$, I start at $d_0 - p_0 = 0$. I then draw $\epsilon_t^d$ and $\epsilon_t^{dp}$ as random normals and simulate the sytem forward."
+
+&lt;/div&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;simulate_data &amp;lt;- function(nrT = 77, phi=0.941, rho=0.9638, vec_sd = c(0.196, 0.14, 0.153)) {
+
+  #Set up vectors
+  shocks_dp &amp;lt;- rnorm(nrT + 1, sd=vec_sd[3])
+  shocks_d  &amp;lt;- rnorm(nrT, sd=vec_sd[2])
+  vec_dp &amp;lt;- numeric(nrT+1)
+
+  #Draw first observation for dividend yield
+  ifelse(phi &amp;gt;= 1, vec_dp[1] &amp;lt;- 0, vec_dp[1] &amp;lt;- rnorm(1, sd=vec_sd[3]^2/(1-phi^2)))
+
+  #Simulate the system forward
+  for (i in 2:(nrT+1)) {
+    vec_dp[i] &amp;lt;- phi * vec_dp[i-1] + shocks_dp[i]
+  }
+  vec_d &amp;lt;- (phi*rho - 1) * vec_dp[1:nrT] + shocks_d
+  vec_r &amp;lt;- shocks_d - rho * shocks_dp[2:(nrT+1)]
+
+  return(data.frame(dp = vec_dp[2:(nrT+1)],
+                    div_growth = vec_d,
+                    ret = vec_r))
+
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is the function to simulate the data. The most confusing part of this function is the fact that we need an additional element in the dividend yield vector. Since the dividend yield of the last period determines today&amp;#39;s dividend yield and dividend growth, we need a start value for the dividend yield. &lt;/p&gt;
+
+&lt;p&gt;Next, we want to run a Monte Carlo simulation in which we draw many samples, run the regressions given above and get some statistics of that. So let&amp;#39;s write this function:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;run_MCS &amp;lt;- function(nrMCS = 50000, ...) {
+
+  reg_coef &amp;lt;- matrix(nrow=nrMCS, ncol=6)
+
+  for (i in 1:nrMCS) {
+
+    #1. Simulate data
+    ts_data &amp;lt;- ts(simulate_data(...))
+
+    #2. Run regressions
+    list_reg &amp;lt;- list(dyn$lm(ret ~ lag(dp, -1), data=ts_data), 
+                     dyn$lm(div_growth ~ lag(dp, -1), data=ts_data),
+                     dyn$lm(dp ~ lag(dp, -1), data=ts_data))
+
+    #3. Get regression coefficients and t-values
+    reg_coef[i, 1:3] &amp;lt;- unlist(lapply(list_reg, 
+                                      FUN = function(reg) summary(reg)$coef[2,1]))
+    reg_coef[i, 4:6] &amp;lt;- unlist(lapply(list_reg, 
+                                      FUN = function(reg) summary(reg)$coef[2,3]))
+
+  }
+
+  reg_coef &amp;lt;- as.data.frame(reg_coef)
+  reg_n &amp;lt;- c(&amp;quot;ret&amp;quot;, &amp;quot;div_growth&amp;quot;, &amp;quot;dp&amp;quot;)
+  names(reg_coef) &amp;lt;- c(paste0(&amp;quot;Coef_&amp;quot;, reg_n), paste0(&amp;quot;tValue_&amp;quot;, reg_n))
+  return(reg_coef)
+
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we have all the ingredients to replicate Table 3 and Figure 1 in Cochrane (2008). Note that he is silent on how long one run actually is, i.e. what &lt;em&gt;nrT&lt;/em&gt; should be in &lt;code&gt;simulate_data&lt;/code&gt;. However, since he calibrates the regressions with 77 years of data, I&amp;#39;m gonna assume that this is the time period he is simulating per run. &lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;nrMCS &amp;lt;- 50000; phi &amp;lt;- 0.941; rho &amp;lt;- 0.9638
+reg_coef &amp;lt;- run_MCS(nrMCS = nrMCS, phi=phi, rho=rho, nrT = 77 , vec_sd = c(0.196, 0.14, 0.153))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, we can check if we get the same results as Cochrane in the first row of his Table 3. &lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;sum(reg_coef$Coef_ret &amp;gt; 0.097)/nrMCS*100
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;## [1] 26.51
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;sum(reg_coef$tValue_ret &amp;gt; 1.92)/nrMCS*100
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;## [1] 9.318
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;sum(reg_coef$Coef_div_growth &amp;gt; 0.008)/nrMCS*100
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;## [1] 2.662
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;sum(reg_coef$Coef_div_growth &amp;gt; 0.18)/nrMCS*100
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;## [1] 0.006
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And we can reproduce the plots:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;library(ggplot2)
+#Plot maximum 5000 points
+ggplot(reg_coef[1:min(nrMCS, 5000), ], aes(x=Coef_ret, y=Coef_div_growth)) +
+  geom_point() + 
+  geom_vline(xintercept=0.097) + 
+  geom_hline(yintercept=0.008) +
+  xlab(expression(b[r])) +
+  ylab(expression(b[d]))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src="/replicating/assets/twitter/media/Cochrane/Replicate_figure_1_coef.png" alt="plot of chunk Replicate_figure_1_coef"&gt; &lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;#Plot maximum 5000 points
+ggplot(reg_coef[1:min(nrMCS, 5000), ], aes(x=tValue_ret, y=tValue_div_growth)) +
+  geom_point() + 
+  geom_vline(xintercept=1.92) + 
+  geom_hline(yintercept=0.18) +
+  xlab(expression(t(b[r]))) +
+  ylab(expression(t(b[d])))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src="/replicating/assets/twitter/media/Cochrane/Replicate_figure_1_tValue.png" alt="plot of chunk Replicate_figure_1_tValue"&gt; &lt;/p&gt;
+
+&lt;p&gt;Cochrane&amp;#39;s main point in this study is that when you just look at the regression coefficient of the log dividend yield on log returns, you would find quite often coefficents as large as or larger than the $0.097$ in the data, &lt;em&gt;even if the true underlying coefficient is zero&lt;/em&gt;. Those are basically all data points right to the vertical line in the plot. The reason we get those significant coefficients and t-values even in a simulated world in which the true underlying coefficient is zero is due to econometrical issues. Concretely, the independent variable, i.e. the dividend yield, is  very persistent and the errors are highly correlated. Stambaugh (1999) is a great start if you want to learn more about that.&lt;/p&gt;
+
+&lt;p&gt;But Cochrane argues that you shouldn&amp;#39;t just look at the regression coefficient on log returns because by definition, either log returns or log dividend growth or both have to be predictable. So if we find positive return coefficients, although return is not predictable, as simulated in his example, then we should also find regression coefficients below $0.008$ for the log dividend yield on log dividend growth. Those are the points below the horizontal line in the plot. However, what we observe in the data is an economically large positive coefficient on log returns and a slightly positive coefficient on log dividend growth and this combination is very unlikely in a world in which log returns are unpredictable. &lt;/p&gt;
+
+&lt;div&gt;
+
+Also, we can reproduce the distribution of the long-run regression coefficients $b_r^{lr} = b_r/(1-\rho \hat{\phi})$. It is important that $b_r^{lr}$ is not estimated with a long-run regression, but computed with this formula. Also, you have to use the empirical autocorrelation coefficient of the dividend yield, i.e. $\hat{\phi}$, not the theoretical one, i.e. the one you pass to the function `run_MCS`. Shocks to realized returns and dividend yields are highly negatively correlated, which means that the empirical $\phi$ is smaller in cases in which $b_r$ is high.
+
+Note that in a few cases, you get very extreme negative estimates for $b_r^{lr}$. This is the case when $\rho \hat{\phi}$ is close to, but smaller than, 1. 
+
+&lt;/div&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;reg_coef$LRC_ret &amp;lt;- reg_coef$Coef_ret / (1-rho*reg_coef$Coef_dp) 
+ggplot(reg_coef, aes(x=LRC_ret)) + 
+  geom_histogram(binwidth=0.05) + 
+  geom_vline(xintercept = 1.09) +
+  xlim(-2, 2)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src="/replicating/assets/twitter/media/Cochrane/Replicate_figure_2.png" alt="plot of chunk Replicate_figure_2"&gt; &lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;min(reg_coef$LRC_ret)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;## [1] -49.15
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;#Plot maximum 5000 points
+ggplot(reg_coef[1:min(nrMCS, 5000), ], aes(x=Coef_ret, y=Coef_dp)) +
+  geom_point() + 
+  geom_vline(xintercept=0.097) + 
+  geom_hline(yintercept=phi) +
+  xlab(expression(b[r])) +
+  ylab(expression(phi)) +
+  geom_line(aes(x=1-rho*c(min(Coef_dp),max(Coef_dp)) + 0.008, 
+                y=c(min(Coef_dp),max(Coef_dp))),
+            linetype=&amp;quot;dotted&amp;quot;) +
+  geom_line(aes(x=0.097*(1-rho*c(min(Coef_dp),max(Coef_dp)))/(1-rho*phi), 
+                y=c(min(Coef_dp),max(Coef_dp))))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src="/replicating/assets/twitter/media/Cochrane/Replicate_figure_3.png" alt="plot of chunk Replicate_figure_3"&gt; &lt;/p&gt;
+
+&lt;div&gt;
+
+As you can see here, there is a clear negative relation between $\phi$ and $b_r$.
+
+Also, just for completeness, here is how you would compute Table 5 in Cochrane, at least the statistics for the regression coefficients.
+
+&lt;/div&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;nrMCS &amp;lt;- 5000 #Otherwise it runs quite long
+vec_phi &amp;lt;- c(0.9, 0.941, 0.96, 0.98, 0.99, 1, 1.01)
+df &amp;lt;- data.frame(Phi = vec_phi,
+                 br  = 0,
+                 bd  = 0)
+df[, 1] &amp;lt;- vec_phi
+i &amp;lt;- 1
+for (p in vec_phi) {
+
+  int_reg_coef &amp;lt;- run_MCS(nrMCS = nrMCS, phi=p, rho=rho, nrT = 77, vec_sd = c(0.196, 0.14, 0.153))
+  df[i, 2] &amp;lt;- sum(int_reg_coef$Coef_ret &amp;gt; 0.097)/nrMCS*100
+  df[i, 3] &amp;lt;- sum(int_reg_coef$Coef_div_growth &amp;gt; 0.008)/nrMCS*100
+  i &amp;lt;- i + 1
+
+}
+print(xtable(df), type=&amp;quot;HTML&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;!-- html table generated in R 2.15.1 by xtable 1.7-1 package --&gt;
+
+&lt;!-- Thu Mar 14 20:21:16 2013 --&gt;
+
+&lt;TABLE border=1&gt;
+&lt;TR&gt; &lt;TH&gt;  &lt;/TH&gt; &lt;TH&gt; Phi &lt;/TH&gt; &lt;TH&gt; br &lt;/TH&gt; &lt;TH&gt; bd &lt;/TH&gt;  &lt;/TR&gt;
+  &lt;TR&gt; &lt;TD align="right"&gt; 1 &lt;/TD&gt; &lt;TD align="right"&gt; 0.90 &lt;/TD&gt; &lt;TD align="right"&gt; 27.18 &lt;/TD&gt; &lt;TD align="right"&gt; 1.00 &lt;/TD&gt; &lt;/TR&gt;
+  &lt;TR&gt; &lt;TD align="right"&gt; 2 &lt;/TD&gt; &lt;TD align="right"&gt; 0.94 &lt;/TD&gt; &lt;TD align="right"&gt; 26.66 &lt;/TD&gt; &lt;TD align="right"&gt; 2.82 &lt;/TD&gt; &lt;/TR&gt;
+  &lt;TR&gt; &lt;TD align="right"&gt; 3 &lt;/TD&gt; &lt;TD align="right"&gt; 0.96 &lt;/TD&gt; &lt;TD align="right"&gt; 26.04 &lt;/TD&gt; &lt;TD align="right"&gt; 3.92 &lt;/TD&gt; &lt;/TR&gt;
+  &lt;TR&gt; &lt;TD align="right"&gt; 4 &lt;/TD&gt; &lt;TD align="right"&gt; 0.98 &lt;/TD&gt; &lt;TD align="right"&gt; 25.46 &lt;/TD&gt; &lt;TD align="right"&gt; 6.58 &lt;/TD&gt; &lt;/TR&gt;
+  &lt;TR&gt; &lt;TD align="right"&gt; 5 &lt;/TD&gt; &lt;TD align="right"&gt; 0.99 &lt;/TD&gt; &lt;TD align="right"&gt; 24.30 &lt;/TD&gt; &lt;TD align="right"&gt; 8.66 &lt;/TD&gt; &lt;/TR&gt;
+  &lt;TR&gt; &lt;TD align="right"&gt; 6 &lt;/TD&gt; &lt;TD align="right"&gt; 1.00 &lt;/TD&gt; &lt;TD align="right"&gt; 25.84 &lt;/TD&gt; &lt;TD align="right"&gt; 11.44 &lt;/TD&gt; &lt;/TR&gt;
+  &lt;TR&gt; &lt;TD align="right"&gt; 7 &lt;/TD&gt; &lt;TD align="right"&gt; 1.01 &lt;/TD&gt; &lt;TD align="right"&gt; 22.14 &lt;/TD&gt; &lt;TD align="right"&gt; 13.28 &lt;/TD&gt; &lt;/TR&gt;
+   &lt;/TABLE&gt;
+
+&lt;div&gt;
+
+And finally, some evidence that the $b_r$ is biased upwards and $\phi$ downwards in small-sample regressions. As you can see, the mean of $b_r$ over all simulations is 0.057. Recall that the null is no predictability, so the correct results should be $b_r=0$. That we still find a positive regression coefficient is due to the highly persistent dividend yield regressor and the fact that the shocks of the dividend yield and the returns have a strong negative correlation, which results in a strong negative relation between the estimated $b_r$ and $\phi$ in a regression. Again, if you want to read more on that topic, check out Stambaugh (1999) .
+
+&lt;/div&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;colMeans(reg_coef)[1:3]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;##        Coef_ret Coef_div_growth         Coef_dp 
+##         0.05708        -0.09323         0.88160
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    <item>
+      <title>How to produce nice tables in PDFs using knitr/Sweave and R</title>
+      <link>http://sample.com/replicating/r/how-to-produce-nice-tables-in-pdfs-using-knitr-sweave-and-r</link>
+      <pubDate>2013-02-03</pubDate>
+      <description>&lt;p&gt;In this post, I want to show you how to produce nice tables in PDFs, even if you use &lt;a href="http://yihui.name/knitr/"&gt;knitr&lt;/a&gt; or &lt;a href="http://www.stat.uni-muenchen.de/%7Eleisch/Sweave/"&gt;Sweave&lt;/a&gt; to produce your reports dynamically. Why should you use tools for  reproducible research in the first place? Well, it guarantees that you always know how you did your analysis. I mean if someone came up to me today and asked me how I computed the mean on page 52 of my diploma thesis, it would take me probably hours to figure that out (or maybe I couldn&amp;#39;t figure it out anymore at all). When someone asks me how I computed the mean of one of my papers written during my PhD, I have a look at my knitr document and could tell him in minutes. That&amp;#39;s the beauty of it, so you should definitely check it out if you don&amp;#39;t use such a tool so far.&lt;/p&gt;
+
+&lt;p&gt;However, one thing that bothered me for a while was that the tables produced didn&amp;#39;t really look great. I mean they had all necessary information in it, but I just like tables that look good and with LaTex (knitr or Sweave are just built on top of LaTex, so you still use that) it is normally quite easy to make tables look great, for instance by using the package &lt;strong&gt;booktabs&lt;/strong&gt;. In my early knitr days, I just edited the .tex file produced by knitr, but this seemed like a quick and dirty hack that was prone to non-reproducible errors (for instance, you delete one row in the table). That&amp;#39;s what you want to get rid of when using those tools, so I figured out how to edit the tables in the source .Rnw file. This is what I want to show you here with a small minimal example.&lt;/p&gt;
+
+&lt;p&gt;There are two key tricks that we have to use:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;The option &lt;em&gt;add.to.row&lt;/em&gt; in the function &lt;em&gt;print.xtable&lt;/em&gt; allows us to enter strings before or after certain rows in your table. &lt;/li&gt;
+&lt;li&gt;The backslash is a special character in R. For instance, if you want to get a line break you type &amp;quot;\n&amp;quot;, which does not actually print that string, but inserts a line break. However, in tables we actually want to enter backslashes at the end of rows because two backslashes break a row there. So how do we do that? We just write four backslashes: the first backslash is then considered as a special character, telling R that the next character should be considered as a normal character, not as a special character. So in this case, the backslash should just be printed. Since we need two backslashes, we have to do that twice. I know, it sounds complicated, but it&amp;#39;s quite similar to the percentage sign in LaTex. You can&amp;#39;t just write % because this tells LaTex that it should be a comment. To actually get the percentage sign, you have to write \%.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;OK, now we have the basics, so let&amp;#39;s actually produce a nice table. In R, you need to load the &lt;strong&gt;xtable&lt;/strong&gt; package and in LaTex, you need to load the &lt;strong&gt;booktabs&lt;/strong&gt; package. Also, I use the package &lt;strong&gt;caption&lt;/strong&gt;; otherwise, the caption is too close to the table. &lt;/p&gt;
+
+&lt;p&gt;Now imagine we want to compare three different regression models (rows) and want to print in the columns the $\alpha$, the $\beta$, the t-value of the $\beta$ coefficient, and the adjusted $R^2$. With randomly drawn data, our minimal example looks like this. &lt;/p&gt;
+
+&lt;p&gt;Here is the source code of the minimal example. Save it as a .Rnw file, &lt;em&gt;knit&lt;/em&gt; that file and you should get a nice &lt;a href="/replicating/assets/twitter/media/Tables_in_R/Minimal_example.pdf"&gt;PDF&lt;/a&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;\begin{document}
+
+Here is our minimal example:
+
+&amp;lt;&amp;lt;Code_chunk_Minimal_example, results=&amp;#39;asis&amp;#39;, echo=FALSE&amp;gt;&amp;gt;=
+library(xtable)
+#Just some random data
+x1 &amp;lt;- rnorm(1000); x2 &amp;lt;- rnorm(1000); x3 &amp;lt;- rnorm(1000)
+y  &amp;lt;- 2 + 1 *x1 + rnorm(1000)
+#Run regressions
+reg1 &amp;lt;- summary(lm(y ~ x1))
+reg2 &amp;lt;- summary(lm(y ~ x2))
+reg3 &amp;lt;- summary(lm(y ~ x3))
+#Create data.frame
+df &amp;lt;- data.frame(Model = 1:3,
+                 Alpha = c(reg1$coef[1,1], reg2$coef[1,1], reg3$coef[1,1]),
+                 Beta  = c(reg1$coef[2,1], reg2$coef[2,1], reg3$coef[2,1]),
+                 tV    = c(reg1$coef[2,2], reg2$coef[2,2], reg3$coef[2,2]),
+                 AdjR  = c(reg1$adj.r.s,  reg2$adj.r.s,   reg3$adj.r.s))
+strCaption &amp;lt;- paste0(&amp;quot;\\textbf{Table Whatever} This table is just produced with some&amp;quot;,
+                     &amp;quot;random data and does not mean anything. Just to show you how &amp;quot;,
+                     &amp;quot;things work.&amp;quot;)
+print(xtable(df, digits=2, caption=strCaption, label=&amp;quot;Test_table&amp;quot;), 
+      size=&amp;quot;footnotesize&amp;quot;, #Change size; useful for bigger tables
+      include.rownames=FALSE, #Don&amp;#39;t print rownames
+      include.colnames=FALSE, #We create them ourselves
+      caption.placement=&amp;quot;top&amp;quot;, 
+      hline.after=NULL, #We don&amp;#39;t need hline; we use booktabs
+      add.to.row = list(pos = list(-1, 
+                                   nrow(df)),
+                        command = c(paste(&amp;quot;\\toprule \n&amp;quot;,
+                                          &amp;quot;Model &amp;amp; $\\alpha$ &amp;amp; $\\beta$ &amp;amp; t-value &amp;amp; $R^2$ \\\\\n&amp;quot;, 
+                                          &amp;quot;\\midrule \n&amp;quot;),
+                                    &amp;quot;\\bottomrule \n&amp;quot;)
+                        )
+      )
+
+@
+
+From table \ref{Test_table} you can&amp;#39;t learn a lot, only how it looks is important here.
+
+\end{document}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A few notes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The option &lt;em&gt;add.to.row&lt;/em&gt; expects two inputs: a list of integers named &lt;em&gt;pos&lt;/em&gt; and a list of strings named &lt;em&gt;command&lt;/em&gt;. The latter keeps the  strings that should be entered, the former tells the function &lt;em&gt;print.xtable&lt;/em&gt; at which row to enter the strings. In our example, we want to add the first string that keeps the column names before everything else. That is why we use $-1$. The bottomrule should be at the very end of the table, that is why we use &lt;em&gt;nrow(df)&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;We have to set &lt;em&gt;hline.after&lt;/em&gt; to NULL because we are not using hlines, but the lines provided by the &lt;strong&gt;booktabs&lt;/strong&gt; package (toprule, midrule, and bottomrule).&lt;/li&gt;
+&lt;li&gt;The example also shows how to write formulas in the table. Again, the only trick is to know that the backslash is a special character, so we have to write two backslashes.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    <item>
+      <title>Replicating Goyal/Welch (2008)</title>
+      <link>http://sample.com/replicating/r/replicating-goyal-welch-2008</link>
+      <pubDate>2013-02-02</pubDate>
+      <description>&lt;h1 id="toc_0"&gt;Some theory&lt;/h1&gt;
+
+&lt;p&gt;I created this blog because I replicate quite a few finance papers with R and I thought that some of you might profit from some of my work. Note, however, that I consider myself a mediocre R user! I&amp;#39;m still one of those guys that uses Stackoverflow mainly for asking questions, not for answering them...so I&amp;#39;m sure that my approach isn&amp;#39;t always the most efficient one and if you have any comments on how to improve my code, let me know!&lt;/p&gt;
+
+&lt;p&gt;OK, let&amp;#39;s start with Goyal/Welch (2008): A Comprehensive Look at The Empirical Performance of Equity Premium Prediction, Review of Financial Studies. You find the paper and the data on Amit Goyal&amp;#39;s &lt;a href="http://www.hec.unil.ch/agoyal/"&gt;webpage&lt;/a&gt;. That&amp;#39;s what I love about finance research nowadays...data is available from the authors, so all you have to do is to download it and you can play around with it yourself.&lt;/p&gt;
+
+&lt;p&gt;What&amp;#39;s this paper all about? Well, there is a huge literature on &amp;quot;return predictability&amp;quot;: you take a predictor, such as the dividend-price ratio or the consumption-wealth ratio, and you try to forecast future excess returns with it. Note that the very idea of return predictability is a paradigm change from the early days, when the random-walk hypothesis implied stock returns that are close to unpredictable. Nowadays, economists argue that stock returns have to be predictable. Why? One big reason is that we have a changing price-dividend ratio over time. If future dividend growth and expected returns were i.i.d., the price-dividend ratio would have to be constant. Thus a changing price-dividend ratio means that one of the two must be forecastable; and research indicates that returns should be the more relevant part here. To read more about that topic, check out chapter 20 in Cochrane (2005, Asset Pricing)  or his &lt;a href="http://faculty.chicagobooth.edu/john.cochrane/research/papers/afa_pres_speech.pdf"&gt;presidential address&lt;/a&gt; to the AFA. &lt;/p&gt;
+
+&lt;p&gt;As already mentioned, there are now tons of papers that deal with return predictability. Goyal/Welch point out that the literature has become so big, with many different predictors, methods, and data sets, that it is quite tough to absorb. Hence, the goal of their article (taken from Goyal/Welch, 2008, p. 1456)&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;is to comprehensively re-examine the empirical evidence as of early 2006, evaluating each variable using the same methods (mostly, but not only, in linear models), time-periods, and estimation frequencies. The evidence suggests that most models are unstable or even spurious. Most models are no longer signi&#xFB01;cant even insample (IS), and the few models that still are usually fail simple regression diagnostics. Most models have performed poorly for over 30 years IS. For many models, any earlier apparent statistical signi&#xFB01;cance was often based exclusively on years up to and especially on the years of the Oil Shock of 1973&#x2013;1975. Most models have poor out-of-sample (OOS) performance, but not in a way that merely suggests lower power than IS tests. They predict poorly late in the sample, not early in the sample. (For many variables, we have dif&#xFB01;culty &#xFB01;nding robust statistical signi&#xFB01;cance even when they are examined only during their most favorable contiguous OOS sub-period.) Finally, the OOS performance is not only a useful model diagnostic for the IS regressions but also interesting in itself for an investor who had sought to use these models for market-timing. Our evidence suggests that the models would not have helped such an investor.&lt;/p&gt;
+
+&lt;p&gt;Therefore, although it is possible to search for, to occasionally stumble upon, and then to defend some seemingly statistically signi&#xFB01;cant models, we interpret our results to suggest that a healthy skepticism is appropriate when it comes to predicting the equity premium, at least as of early 2006. The models do not seem robust. &lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id="toc_1"&gt;Replication&lt;/h1&gt;
+
+&lt;p&gt;In my opinion, the most interesting part about this paper is that they don&amp;#39;t bother to look at any regression coefficients. So the results are very different from what you usually see in such papers. Basically, they just look at the mean squared errors (MSE) (from Wikipedia: In statistics, the mean squared error (MSE) of an estimator is one of many ways to quantify the difference between values implied by an estimator and the true values of the quantity being estimated. MSE is a risk function, corresponding to the expected value of the squared error loss or quadratic loss. MSE measures the average of the squares of the errors.) and transform the MSE to several useful statistics:&lt;/p&gt;
+
+&lt;div&gt;
+
+$$
+\begin{aligned}
+R^2   &amp;= 1 - \frac{MSE_A}{MSE_N} \\
+\Delta  RMSE &amp;= \sqrt{MSE_N} - \sqrt{MSE_A}\\
+\end{aligned}
+$$
+
+where $h$ is the degree of overlap ($h=1$ for no overlap). Note that $MSE_N=E[e_N^2]$ and $MSE_A=E[e_A^2]$, where $e_N$ denote the vector of rolling OOS errors from the historical mean model and $e_A$ denote the vector of rolling OOS from the OLS model. Now, this is very important so let's think about this for a while: many scholars within the return predictability literature argue that a bunch of variables forecast equity premiums. Goyal/Welch (2008) now use the same test with the same time period for all those variables and compare it to the simplest of all forecasting techniques: the simple historic average.
+
+Note, however, that these statistics only apply to the OOS tests. For the IS tests, $R^2$ is just the R squared you know from a linear regression, and $\overline{R}^2$ is the adjusted one.
+
+&lt;/div&gt;
+
+&lt;h2 id="toc_2"&gt;Data&lt;/h2&gt;
+
+&lt;p&gt;The data is taken from Amit Goyal&amp;#39;s &lt;a href="http://www.hec.unil.ch/agoyal/"&gt;webpage&lt;/a&gt;. There is an updated version from 2010. However, I&amp;#39;m using the original data from 2005, so I can easily control the correctness of my computations. Also, I repeat some definitions of the appendix here:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Stock Variance (&lt;strong&gt;svar&lt;/strong&gt;): Stock Variance is computed as sum of squared daily returns on S&amp;amp;P 500. Daily returns for 1871 to 1926 are obtained from Bill Schwert while daily returns from 1926 to 2005 are obtained from CRSP&lt;/li&gt;
+&lt;li&gt;Cross-Sectional Premium (&lt;strong&gt;csp&lt;/strong&gt;): The cross-sectional beta premium measures the relative valuations of high- and low-beta stocks. We obtained this variable directly from Sam Thompson. This variable is available from May 1937 to December 2002&lt;/li&gt;
+&lt;li&gt;NetEquity Expansion (&lt;strong&gt;ntis&lt;/strong&gt;) is the ratio of twelve-month moving sums of net issues by NYSE listed stocks divided by the total market capitalization of NYSE stocks&lt;/li&gt;
+&lt;li&gt;Long Term Yield (&lt;strong&gt;lty&lt;/strong&gt;): Long-term government bond yields for the period 1919 to 1925 is the U.S. Yield On Long-Term United States Bonds series from NBER&#x2019;s Macrohistory database. Yields from 1926 to 2005 are from Ibbotson&#x2019;s Stocks, Bonds, Bills and In&#xFB02;ation Yearbook&lt;/li&gt;
+&lt;li&gt;Long Term Rate of Return (&lt;strong&gt;ltr&lt;/strong&gt;): Long-term government bond returns for the period 1926 to 2005 are from Ibbotson&#x2019;s Stocks, Bonds, Bills and In&#xFB02;ation Yearbook&lt;/li&gt;
+&lt;li&gt;The Term Spread (&lt;strong&gt;tms&lt;/strong&gt;) is the di&#xFB00;erence between the long term yield on government bonds and the T-bill&lt;/li&gt;
+&lt;li&gt;In&#xFB02;ation (&lt;strong&gt;in&#xFB02;&lt;/strong&gt;): In&#xFB02;ation is the Consumer Price Index (All Urban Consumers) for the period 1919 to 2005 from the Bureau of Labor Statistics. Because in&#xFB02;ation information is released only in the following month, in our monthly regressions, we inserted one month of waiting before use In&#xFB02;ation (in&#xFB02;): In&#xFB02;ation is the Consumer Price Index (All Urban Consumers) for the period 1919 to 2005 from the Bureau of Labor Statistics. Because in&#xFB02;ation information is released only in the following month, in our monthly regressions, we inserted one month of waiting before use.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The monthly, quarterly, and annual data is saved in one Excel file. To read that into R, I have split this excel file into three CSV-files. Now it&amp;#39;s easy to read them in. Also, I convert them into &lt;code&gt;data.tables&lt;/code&gt; because I prefer to work with them instead of &lt;code&gt;data.frames&lt;/code&gt;. Finally, I use the package &lt;code&gt;lubridate&lt;/code&gt; to convert the column &lt;code&gt;Datum&lt;/code&gt; into a date. You have to name this column yourself in the CSV-file!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;library(data.table)
+library(ggplot2)
+library(lubridate)
+library(dyn)
+library(reshape2)
+monthly &amp;lt;- read.csv2(&amp;quot;/home/christophj/Dropbox/FinanceIssues/ReturnPredictability/Data/monthly_2005.csv&amp;quot;, 
+                     na.strings=&amp;quot;NaN&amp;quot;, stringsAsFactors=FALSE)
+annual  &amp;lt;- read.csv2(&amp;quot;/home/christophj/Dropbox/FinanceIssues/ReturnPredictability/Data/annual_2005.csv&amp;quot;, 
+                     na.strings=&amp;quot;NaN&amp;quot;, stringsAsFactors=FALSE)
+monthly &amp;lt;- as.data.table(monthly)
+annual  &amp;lt;- as.data.table(annual)
+monthly &amp;lt;- monthly[, Datum := ymd(Datum)]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;First of all, we have to compute the dividend price ratio (d/p) and the dividend yield (d/y). They are defined as the difference between the log of dividends and the log of prices and as the difference between the log of dividends and the log of &lt;em&gt;lagged&lt;/em&gt; prices. Also, we have to compute the equity premium as the difference of the S&amp;amp;P returns and the risk-free rate. A few things to notice here:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;It took me a while to get the same summary statistics as in Goyal/Welch (2008). A few problems here: Goyal always provides updated data on his website. The problem with this data is that it not only adds new data points, but it also changes the historical data. For instance, the dividends were slightly adjusted. Hence, to get the same results as in Goyal/Welch (2008), you have to use the original data set.&lt;/li&gt;
+&lt;li&gt;Also, you have to figure out if everything is defined in simple or log returns. They explain it in table 1 of their 2003 Management Science paper (&amp;quot;Predicting the Equity Premium with Dividend Ratios&amp;quot;) more clearly: &amp;quot;(The expected return) $Rm(t)$ is the log of the total return on the value-weighted stock market from year $t-1$ to $t$. (The equity premium) $EQP(t)$ subtracts the equivalent log return on a three-month treasury bill. $DP(t)$ is the dividend-price ratio, i.e., the log of aggregate dividends $D(t)$ divided by the aggregate stock market value $P(t)$. $DY(t)$, the dividend-yield ratio, divides by $P(t-1)$ instead... All variables are in percentages.&amp;quot;&lt;/li&gt;
+&lt;li&gt;The rest is try and error. Doing so, you will find out that the risk-free rate is provided in simple, not log returns, so you have to do that yourself.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So let&amp;#39;s calculate the relevant variables, i.e. the log equity premium (&lt;em&gt;rp_div&lt;/em&gt;), dividend-price ratio (&lt;em&gt;dp&lt;/em&gt;), and the dividend yield (&lt;em&gt;dy&lt;/em&gt;), and plot them over time:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;annual &amp;lt;- annual[, IndexDiv := Index + D12]
+annual &amp;lt;- annual[, dp := log(D12) - log(Index)]
+annual &amp;lt;- annual[, ep := log(E12) - log(Index)]
+vec_dy &amp;lt;- c(NA, annual[2:nrow(annual), log(D12)] - annual[1:(nrow(annual)-1), log(Index)])
+annual &amp;lt;- annual[, dy := vec_dy]
+annual &amp;lt;- annual[, logret   :=c(NA,diff(log(Index)))]
+vec_logretdiv &amp;lt;- c(NA, annual[2:nrow(annual), log(IndexDiv)] - annual[1:(nrow(annual)-1), log(Index)])
+vec_logretdiv &amp;lt;- c(NA, log(annual[2:nrow(annual), IndexDiv]/annual[1:(nrow(annual)-1), Index]))
+annual &amp;lt;- annual[, logretdiv:=vec_logretdiv]
+annual &amp;lt;- annual[, logRfree := log(Rfree + 1)]
+annual &amp;lt;- annual[, rp_div   := logretdiv - logRfree]
+#Put it in time series (is needed in function get_statistics)
+ts_annual &amp;lt;- ts(annual, start=annual[1, Datum], end=annual[nrow(annual), Datum])
+plot(ts_annual[, c(&amp;quot;rp_div&amp;quot;, &amp;quot;dp&amp;quot;, &amp;quot;dy&amp;quot;)])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src="/replicating/assets/twitter/media/Goyal-Welch/Compute_DP_and_DY.png" alt="plot of chunk Compute_DP_and_DY"&gt; &lt;/p&gt;
+
+&lt;p&gt;This yields exactly the same equity premia as in Goyal/Welch (2008, p. 1457), more precisely a mean (standard deviation) of the log equity risk premium of 4.84% (17.79%) for the complete sample from 1872 to 2005; of 6.04% (19.17%) from 1927 to 2005; and of 6.04% (15.70%) from 1965 to 2005.&lt;/p&gt;
+
+&lt;p&gt;Also, a look at the figure is interesting, which replicates figure 1 from Goyal/Welch (2003). They write &amp;quot;... that there is some nonstationarity in the dividend ratios. The dividend ratios are almost random walks, while the equity premia are almost i.i.d. Not surprisingly, the augmented Dickey and Fuller (1979) test indicates that over the entire sample period, we cannot reject that the dividend ratios contain a unit-root (see Stambaugh 1999 and Yan 1999).&amp;quot;&lt;/p&gt;
+
+&lt;h2 id="toc_3"&gt;Define function&lt;/h2&gt;
+
+&lt;p&gt;Next, we want to replicate the plots in Goyal/Welch (2008), i.e. we plot the cumulative squared predictions errors of the NULL (simple average mean) minus the cumulative squared prediction error of the ALTERNATIVE, where the ALTERNATIVE is a model that relies on a predictive variable to forecast the equity premium. We also give some summary statistics.&lt;/p&gt;
+
+&lt;p&gt;This is all done in one function. This function takes a &lt;code&gt;data.frame&lt;/code&gt; (note that a &lt;code&gt;data.table&lt;/code&gt; is just a &lt;code&gt;data.frame&lt;/code&gt;) (&lt;em&gt;ts_df&lt;/em&gt;), the independent variable (&lt;em&gt;indep&lt;/em&gt;), the dependent variable (&lt;em&gt;dep&lt;/em&gt;), the degree of overlap (&lt;em&gt;h&lt;/em&gt;), the start year (&lt;em&gt;start&lt;/em&gt;) , the end year (&lt;em&gt;end&lt;/em&gt;), and the OOS period (&lt;em&gt;OOS_period&lt;/em&gt;), which basically decides how many periods are used to compute the out-of-sample statistics.&lt;/p&gt;
+
+&lt;p&gt;A few comments on the function (I hope the rest is self-explanatory, otherwise leave a comment):&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The function &lt;code&gt;window&lt;/code&gt; expects a time-series. This is why we called the function &lt;code&gt;ts&lt;/code&gt; further above. The function &lt;code&gt;window&lt;/code&gt; is quite convenient in subsetting a data set based on the date.&lt;/li&gt;
+&lt;li&gt;The package &lt;code&gt;dyn&lt;/code&gt; is used to easily run regressions with a lagged variable.&lt;/li&gt;
+&lt;li&gt;In general, the lines in which I call functions like &lt;code&gt;eval&lt;/code&gt;, &lt;code&gt;parse&lt;/code&gt;, etc. might be quite confusing. This looks quite complicated, but allows me to select the variables in &lt;em&gt;ts_df&lt;/em&gt; dynamically. I&amp;#39;m confused about how this actually works myself, so for me it&amp;#39;s mostly try and error. Hadley Wickham&amp;#39;s &lt;a href="https://github.com/hadley/devtools/wiki/Evaluation"&gt;webpage&lt;/a&gt; is quite helpful though.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;get_statistics &amp;lt;- function(ts_df, indep, dep, h=1, start=1872, end=2005, est_periods_OOS = 20) {
+
+  #### IS ANALYSIS
+
+  #1. Historical mean model
+  avg   &amp;lt;- mean(window(ts_df, start, end)[, dep], na.rm=TRUE)
+  IS_error_N &amp;lt;- (window(ts_df, start, end)[, dep] - avg)
+
+  #2. OLS model
+  reg &amp;lt;- dyn$lm(eval(parse(text=dep)) ~ lag(eval(parse(text=indep)), -1), data=window(ts_df, start, end))
+  IS_error_A &amp;lt;- reg$residuals
+  ### 
+
+  ####OOS ANALYSIS
+  OOS_error_N &amp;lt;- numeric(end - start - est_periods_OOS)
+  OOS_error_A &amp;lt;- numeric(end - start - est_periods_OOS)
+  #Only use information that is available up to the time at which the forecast is made
+  j &amp;lt;- 0
+  for (i in (start + est_periods_OOS):(end-1)) {
+    j &amp;lt;- j + 1
+    #Get the actual ERP that you want to predict
+    actual_ERP &amp;lt;- as.numeric(window(ts_df, i+1, i+1)[, dep])
+
+    #1. Historical mean model
+    OOS_error_N[j] &amp;lt;- actual_ERP - mean(window(ts_df, start, i)[, dep], na.rm=TRUE)
+
+    #2. OLS model
+    reg_OOS &amp;lt;- dyn$lm(eval(parse(text=dep)) ~ lag(eval(parse(text=indep)), -1), 
+                      data=window(ts_df, start, i))
+    #Compute_error
+    df &amp;lt;- data.frame(x=as.numeric(window(ts_df, i, i)[, indep]))
+    names(df) &amp;lt;- indep
+    pred_ERP   &amp;lt;- predict.lm(reg_OOS, newdata=df)
+    OOS_error_A[j] &amp;lt;-  pred_ERP - actual_ERP
+
+  }
+
+
+  #Compute statistics 
+  MSE_N &amp;lt;- mean(OOS_error_N^2)
+  MSE_A &amp;lt;- mean(OOS_error_A^2)
+  T &amp;lt;- length(!is.na(ts_df[, dep]))
+  OOS_R2  &amp;lt;- 1 - MSE_A/MSE_N
+  #Is the -1 enough (maybe -2 needed because of lag)?
+  OOS_oR2 &amp;lt;- OOS_R2 - (1-OOS_R2)*(reg$df.residual)/(T - 1) 
+  dRMSE &amp;lt;- sqrt(MSE_N) - sqrt(MSE_A)
+  ##
+
+  #### CREATE PLOT
+  IS  &amp;lt;- cumsum(IS_error_N[2:length(IS_error_N)]^2)-cumsum(IS_error_A^2)
+  OOS &amp;lt;- cumsum(OOS_error_N^2)-cumsum(OOS_error_A^2)
+  df  &amp;lt;- data.frame(x=seq.int(from=start + 1 + est_periods_OOS, to=end), 
+                    IS=IS[(1 + est_periods_OOS):length(IS)], 
+                    OOS=OOS) #Because you lose one observation due to the lag
+  #Shift IS errors vertically, so that the IS line begins 
+  # at zero on the date of first OOS prediction. (see Goyal/Welch (2008, p. 1465))
+  df$IS &amp;lt;- df$IS - df$IS[1] 
+  df  &amp;lt;- melt(df, id.var=&amp;quot;x&amp;quot;) 
+  plotGG &amp;lt;- ggplot(df) + 
+    geom_line(aes(x=x, y=value,color=variable)) + 
+    geom_rect(data=data.frame(),#Needed by ggplot2, otherwise not transparent
+              aes(xmin=1973, xmax=1975,ymin=-0.2,ymax=0.2), 
+              fill=&amp;#39;red&amp;#39;,
+              alpha=0.1) + 
+    scale_y_continuous(&amp;#39;Cumulative SSE Difference&amp;#39;, limits=c(-0.2, 0.2)) + 
+    scale_x_continuous(&amp;#39;Year&amp;#39;)
+  ##
+
+  return(list(IS_error_N = IS_error_N,
+              IS_error_A = reg$residuals,
+              OOS_error_N = OOS_error_N,
+              OOS_error_A = OOS_error_A,
+              IS_R2 = summary(reg)$r.squared, 
+              IS_aR2 = summary(reg)$adj.r.squared, 
+              OOS_R2  = OOS_R2,
+              OOS_oR2 = OOS_oR2,
+              dRMSE = dRMSE,
+              plotGG = plotGG))
+
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, we can easily replicate the plots in Goyal/Welch (2008). All we need to do is type two lines of code. Let&amp;#39;s start!&lt;/p&gt;
+
+&lt;h2 id="toc_4"&gt;In-sample analysis (IS)&lt;/h2&gt;
+
+&lt;h3 id="toc_5"&gt;Dividend-price ratio&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;dp_stat &amp;lt;- get_statistics(ts_annual, &amp;quot;dp&amp;quot;, &amp;quot;rp_div&amp;quot;, start=1872)
+dp_stat$plotGG
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src="/replicating/assets/twitter/media/Goyal-Welch/IS_dp.png" alt="plot of chunk IS_dp"&gt; &lt;/p&gt;
+
+&lt;p&gt;This figure looks exactly like the chart in Figure 1 of Goyal/Welch (2008), but my statistics are very different. Particularly the $\overline{R}^2$, which is 0.48% and 0.49% for them.&lt;/p&gt;
+
+&lt;h3 id="toc_6"&gt;Dividend-yield&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;dy_stat &amp;lt;- get_statistics(ts_annual, &amp;quot;dy&amp;quot;, &amp;quot;rp_div&amp;quot;, start=1872)
+dy_stat$plotGG
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src="/replicating/assets/twitter/media/Goyal-Welch/IS_dy.png" alt="plot of chunk IS_dy"&gt; &lt;/p&gt;
+
+&lt;p&gt;Statistics: $\overline{R}^2$, which is 0.90% and 0.91% for them.&lt;/p&gt;
+
+&lt;h3 id="toc_7"&gt;Earnings-price ratio&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class="r"&gt;ep_stat &amp;lt;- get_statistics(ts_annual, &amp;quot;ep&amp;quot;, &amp;quot;rp_div&amp;quot;, start=1872)
+ep_stat$plotGG
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src="/replicating/assets/twitter/media/Goyal-Welch/IS_ep.png" alt="plot of chunk IS_ep"&gt; &lt;/p&gt;
+
+&lt;p&gt;Statistics: $\overline{R}^2$, which is 1.10% and 1.08% for them.&lt;/p&gt;
+
+&lt;p&gt;So this post showed you how to reproduce the plots of Goyal/Welch (2008) with R. Note that this post is meant to show you how easily this can be done with R, not to replicate exactly the statistics in their paper. A few things are off (plots are not exactly identical, $\overline{R&lt;em&gt;{IS}}^2$ is not always correct, my $\overline{R&lt;/em&gt;{OOS}}^2$ is wrong), but since I get basically the same results as they do, I don&amp;#39;t have the motivation right now to figure out where the really small deviations are coming from. Feel free to tell me if you figure it out, though.&lt;/p&gt;
+</description>
+    </item>
+  </channel>
+</rss>
